@@ -166,10 +166,9 @@ Full reference: [`cart-api/README.md`](cart-api/README.md).
 
 ## Hardware
 
-> [!NOTE]
-> 🚧 **Under construction.** Renders of the hardware designs (steering motor mount,
-> belt drive, pedal actuator brackets, camera and GPS mounts, compute enclosure)
-> are coming soon. The CAD files will live in [`hardware/cad/`](hardware/cad).
+<div align="center">
+<img src="docs/assets/hardware-coming-soon.svg" width="720" alt="Blueprint placeholder: hardware design renders coming soon">
+</div>
 
 | Subsystem | Hardware | Interface |
 |-----------|----------|-----------|
