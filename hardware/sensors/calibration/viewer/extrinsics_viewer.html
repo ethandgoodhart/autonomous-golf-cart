@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Camera Extrinsics Viewer</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #15171b;
+      color: #edf0f5;
+    }
+
+    #app {
+      position: fixed;
+      inset: 0;
+    }
+
+    #hud {
+      position: fixed;
+      left: 16px;
+      top: 16px;
+      width: min(420px, calc(100vw - 32px));
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(18, 20, 24, 0.82);
+      backdrop-filter: blur(8px);
+      border-radius: 8px;
+      line-height: 1.35;
+      font-size: 13px;
+    }
+
+    #hud h1 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    #hud p {
+      margin: 6px 0;
+      color: #bac2cf;
+    }
+
+    #hud code {
+      color: #f5d06f;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    #legend {
+      display: grid;
+      grid-template-columns: 12px 1fr;
+      gap: 6px 8px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="hud">
+    <h1>Manual Camera Extrinsics</h1>
+    <p>Drag to orbit. Shift-drag to pan. Wheel to zoom.</p>
+    <p>Frame: <code>+X forward</code>, <code>+Y left</code>, <code>+Z up</code>.</p>
+    <p>Loaded: <code>REAL_manual_extrinsics_front_reference.json</code></p>
+    <div id="legend"></div>
+  </div>
+
+  <script type="module">
+    import * as THREE from "../../web/static/vendor/three/three.module.js";
+
+    const app = document.getElementById("app");
+    const legend = document.getElementById("legend");
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x15171b);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    app.appendChild(renderer.domElement);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100);
+    const target = new THREE.Vector3(0, 0, -0.25);
+    let radius = 2.2;
+    let theta = 0.85;
+    let phi = 1.05;
+
+    function updateCamera() {
+      const x = target.x + radius * Math.sin(phi) * Math.sin(theta);
+      const y = target.y + radius * Math.cos(phi);
+      const z = target.z + radius * Math.sin(phi) * Math.cos(theta);
+      camera.position.set(x, y, z);
+      camera.lookAt(target);
+    }
+    updateCamera();
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x2d3544, 1.7));
+    const key = new THREE.DirectionalLight(0xffffff, 1.2);
+    key.position.set(2, 4, 3);
+    scene.add(key);
+
+    // Body frame -> Three.js frame:
+    // body +X forward => Three -Z, body +Y left => Three -X, body +Z up => Three +Y.
+    function bodyToThree(v) {
+      return new THREE.Vector3(-v[1], v[2], -v[0]);
+    }
+
+    function addLine(points, color, width = 1) {
+      const geom = new THREE.BufferGeometry().setFromPoints(points.map(bodyToThree));
+      const mat = new THREE.LineBasicMaterial({ color, linewidth: width });
+      const line = new THREE.Line(geom, mat);
+      scene.add(line);
+      return line;
+    }
+
+    function addGrid() {
+      const grid = new THREE.GridHelper(2.4, 24, 0x46505f, 0x2b3038);
+      grid.position.y = -0.001;
+      scene.add(grid);
+
+      addLine([[0, 0, 0], [0.8, 0, 0]], 0x50d36f);
+      addLine([[0, 0, 0], [0, 0.8, 0]], 0x5aa9ff);
+      addLine([[0, 0, 0], [0, 0, 0.45]], 0xff5f6d);
+      addText("+X forward", [0.86, 0, 0], 0x50d36f);
+      addText("+Y left", [0, 0.86, 0], 0x5aa9ff);
+      addText("+Z up", [0, 0, 0.50], 0xff5f6d);
+    }
+
+    function makeTextTexture(text, colorHex) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 128;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = "48px system-ui, sans-serif";
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.85)";
+      ctx.fillStyle = `#${colorHex.toString(16).padStart(6, "0")}`;
+      ctx.strokeText(text, 18, 78);
+      ctx.fillText(text, 18, 78);
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    }
+
+    function addText(text, bodyPos, color) {
+      const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: makeTextTexture(text, color),
+        transparent: true,
+        depthTest: false,
+      }));
+      sprite.position.copy(bodyToThree(bodyPos));
+      sprite.scale.set(0.28, 0.07, 1);
+      scene.add(sprite);
+      return sprite;
+    }
+
+    function yawVec(deg, scale) {
+      const a = THREE.MathUtils.degToRad(deg);
+      return [Math.cos(a) * scale, Math.sin(a) * scale, 0];
+    }
+
+    function addCameraRig(name, m, color) {
+      const p = m.position_m;
+      const yaw = m.yaw_deg || 0;
+      const hFov = 74;
+      const vFov = 54;
+      const near = 0.10;
+      const far = 0.75;
+      const yawRad = THREE.MathUtils.degToRad(yaw);
+
+      function point(dist, yawOffsetDeg, zOffset) {
+        const a = yawRad + THREE.MathUtils.degToRad(yawOffsetDeg);
+        return [
+          p[0] + Math.cos(a) * dist,
+          p[1] + Math.sin(a) * dist,
+          p[2] + zOffset,
+        ];
+      }
+
+      const farHalfH = Math.tan(THREE.MathUtils.degToRad(hFov / 2)) * far;
+      const farHalfV = Math.tan(THREE.MathUtils.degToRad(vFov / 2)) * far;
+      const center = point(far, 0, 0);
+      const leftDir = yawRad + Math.PI / 2;
+      const right = [Math.cos(leftDir) * farHalfH, Math.sin(leftDir) * farHalfH, 0];
+      const up = [0, 0, farHalfV];
+      const corners = [
+        [center[0] + right[0] + up[0], center[1] + right[1] + up[1], center[2] + right[2] + up[2]],
+        [center[0] - right[0] + up[0], center[1] - right[1] + up[1], center[2] - right[2] + up[2]],
+        [center[0] - right[0] - up[0], center[1] - right[1] - up[1], center[2] - right[2] - up[2]],
+        [center[0] + right[0] - up[0], center[1] + right[1] - up[1], center[2] + right[2] - up[2]],
+      ];
+
+      const origin = [p[0], p[1], p[2]];
+      addLine([origin, corners[0], corners[1], origin, corners[2], corners[1], corners[2], corners[3], corners[0], corners[3], origin], color);
+      addLine([origin, point(0.42, 0, 0)], color);
+
+      const body = new THREE.Mesh(
+        new THREE.BoxGeometry(0.045, 0.035, 0.07),
+        new THREE.MeshStandardMaterial({ color, roughness: 0.65 })
+      );
+      body.position.copy(bodyToThree(origin));
+      body.rotation.y = -yawRad;
+      scene.add(body);
+
+      addText(name, [p[0], p[1], p[2] + 0.085], color);
+
+      const rowColor = `#${color.toString(16).padStart(6, "0")}`;
+      legend.insertAdjacentHTML("beforeend", `<div class="swatch" style="background:${rowColor}"></div><div>${name}: x=${p[0].toFixed(3)}m y=${p[1].toFixed(3)}m z=${p[2].toFixed(3)}m yaw=${yaw.toFixed(1)}deg</div>`);
+    }
+
+    function addCartReference() {
+      const mat = new THREE.MeshStandardMaterial({ color: 0x2a313c, roughness: 0.8, metalness: 0.0 });
+      const deck = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.025, 1.05), mat);
+      deck.position.copy(bodyToThree([-0.2, 0, -0.035]));
+      scene.add(deck);
+      addLine([[-0.95, -0.4, 0], [0.55, -0.4, 0], [0.55, 0.4, 0], [-0.95, 0.4, 0], [-0.95, -0.4, 0]], 0x6a7280);
+    }
+
+    const res = await fetch("../cameras/REAL_manual_extrinsics_front_reference.json");
+    const data = await res.json();
+    addGrid();
+    addCartReference();
+
+    const colors = {
+      front: 0xf5d06f,
+      front_left: 0x5aa9ff,
+      front_right: 0xff6f8f,
+    };
+    for (const [name, m] of Object.entries(data.manual_measurements_body_frame)) {
+      addCameraRig(name, m, colors[name] || 0xffffff);
+    }
+
+    let dragging = false;
+    let panning = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    renderer.domElement.addEventListener("pointerdown", (e) => {
+      dragging = true;
+      panning = e.shiftKey || e.button === 1;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      renderer.domElement.setPointerCapture(e.pointerId);
+    });
+    renderer.domElement.addEventListener("pointerup", (e) => {
+      dragging = false;
+      renderer.domElement.releasePointerCapture(e.pointerId);
+    });
+    renderer.domElement.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      if (panning) {
+        const pan = 0.0018 * radius;
+        const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0);
+        const up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+        target.addScaledVector(right, -dx * pan);
+        target.addScaledVector(up, dy * pan);
+      } else {
+        theta -= dx * 0.006;
+        phi = Math.max(0.12, Math.min(Math.PI - 0.12, phi + dy * 0.006));
+      }
+      updateCamera();
+    });
+    renderer.domElement.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      radius = Math.max(0.35, Math.min(8, radius * Math.exp(e.deltaY * 0.001)));
+      updateCamera();
+    }, { passive: false });
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>

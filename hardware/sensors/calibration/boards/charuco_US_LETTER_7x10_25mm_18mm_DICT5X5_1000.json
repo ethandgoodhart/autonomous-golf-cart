@@ -1,0 +1,12 @@
+{
+  "board_type": "charuco",
+  "squares_x": 7,
+  "squares_y": 10,
+  "square_size_mm": 25.0,
+  "marker_size_mm": 18.0,
+  "dictionary": "DICT_5X5_1000",
+  "board_width_mm": 175.0,
+  "board_height_mm": 250.0,
+  "pdf_page": "US Letter portrait",
+  "print_scaling": "100 percent / actual size"
+}

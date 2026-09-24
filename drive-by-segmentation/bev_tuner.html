@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BEV Calibration Tuner</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a1a; color: #eee; font-family: system-ui, sans-serif; display: flex; height: 100vh; }
+#sidebar { width: 320px; padding: 16px; overflow-y: auto; background: #222; border-right: 1px solid #444; flex-shrink: 0; }
+#main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px; gap: 8px; }
+#canvases { display: flex; gap: 12px; align-items: start; }
+canvas { background: #111; border: 1px solid #444; border-radius: 4px; }
+h2 { font-size: 14px; color: #aaa; margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 1px; }
+h2:first-child { margin-top: 0; }
+.param { margin-bottom: 10px; }
+.param label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 2px; }
+.param label span { color: #8cf; font-weight: bold; }
+.param input[type=range] { width: 100%; accent-color: #8cf; }
+#frame-nav { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+#frame-nav button { padding: 4px 12px; background: #444; border: none; color: #eee; border-radius: 4px; cursor: pointer; }
+#frame-nav button:hover { background: #666; }
+#frame-info { font-size: 12px; color: #888; }
+#status { font-size: 12px; color: #888; margin-top: 8px; }
+#log { font-size: 11px; color: #aaa; background: #111; padding: 8px; margin-top: 12px; border-radius: 4px; max-height: 200px; overflow-y: auto; white-space: pre-wrap; display: none; }
+.section { border-bottom: 1px solid #333; padding-bottom: 12px; }
+#load-area { text-align: center; padding: 20px; }
+#load-area button { padding: 8px 20px; background: #4a9eff; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.legend-item { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h2>Frame</h2>
+    <div class="section">
+        <div id="load-area">
+            <input type="file" id="npz-input" accept=".npz" style="display:none">
+            <button onclick="document.getElementById('npz-input').click()">Load seg_maps.npz</button>
+            <div id="status">Load a seg_maps.npz from eval_output/</div>
+        </div>
+        <div id="frame-nav" style="display:none">
+            <button onclick="prevFrame()">Prev</button>
+            <span id="frame-info">0 / 0</span>
+            <button onclick="nextFrame()">Next</button>
+            <input type="range" id="frame-slider" min="0" value="0" style="flex:1" oninput="setFrame(this.value)">
+        </div>
+    </div>
+
+    <h2>Intrinsics</h2>
+    <div class="section">
+        <div class="param">
+            <label>Focal Length <span id="v-f">387</span></label>
+            <input type="range" id="s-f" min="200" max="600" step="1" value="387" oninput="update()">
+        </div>
+        <div class="param">
+            <label>CX <span id="v-cx">346</span></label>
+            <input type="range" id="s-cx" min="200" max="500" step="1" value="346" oninput="update()">
+        </div>
+        <div class="param">
+            <label>CY <span id="v-cy">240</span></label>
+            <input type="range" id="s-cy" min="100" max="380" step="1" value="240" oninput="update()">
+        </div>
+        <div class="param">
+            <label>K1 <span id="v-k1">0.000</span></label>
+            <input type="range" id="s-k1" min="-0.5" max="0.5" step="0.001" value="0" oninput="update()">
+        </div>
+        <div class="param">
+            <label>K2 <span id="v-k2">0.000</span></label>
+            <input type="range" id="s-k2" min="-0.5" max="0.5" step="0.001" value="0" oninput="update()">
+        </div>
+    </div>
+
+    <h2>Extrinsics</h2>
+    <div class="section">
+        <div class="param">
+            <label>Height (ft) <span id="v-h">5.85</span></label>
+            <input type="range" id="s-h" min="3" max="8" step="0.01" value="5.85" oninput="update()">
+        </div>
+        <div class="param">
+            <label>Pitch (deg) <span id="v-pitch">5.0</span></label>
+            <input type="range" id="s-pitch" min="-10" max="30" step="0.1" value="5" oninput="update()">
+        </div>
+        <div class="param">
+            <label>Roll (deg) <span id="v-roll">-0.75</span></label>
+            <input type="range" id="s-roll" min="-5" max="5" step="0.05" value="-0.75" oninput="update()">
+        </div>
+        <div class="param">
+            <label>Yaw (deg) <span id="v-yaw">0.0</span></label>
+            <input type="range" id="s-yaw" min="-10" max="10" step="0.1" value="0" oninput="update()">
+        </div>
+    </div>
+
+    <h2>BEV Range</h2>
+    <div class="section">
+        <div class="param">
+            <label>Forward (ft) <span id="v-fwd">50</span></label>
+            <input type="range" id="s-fwd" min="20" max="100" step="5" value="50" oninput="update()">
+        </div>
+        <div class="param">
+            <label>Side (ft) <span id="v-side">25</span></label>
+            <input type="range" id="s-side" min="10" max="50" step="5" value="25" oninput="update()">
+        </div>
+    </div>
+
+    <h2>Legend</h2>
+    <div class="legend" id="legend"></div>
+
+    <div style="margin-top: 16px">
+        <button onclick="exportCalib()" style="padding:6px 16px;background:#4a4;border:none;color:white;border-radius:4px;cursor:pointer;">Export Calibration JSON</button>
+    </div>
+
+    <div id="log"></div>
+</div>
+
+<div id="main">
+    <div id="canvases">
+        <div>
+            <div style="font-size:12px;color:#888;margin-bottom:4px">Segmentation Overlay</div>
+            <canvas id="overlay-canvas" width="640" height="480"></canvas>
+        </div>
+        <div>
+            <div style="font-size:12px;color:#888;margin-bottom:4px">Bird's Eye View</div>
+            <canvas id="bev-canvas" width="500" height="500"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+const COLORS = [
+    [128,64,128],[244,35,232],[70,70,70],[102,102,156],[190,153,153],
+    [153,153,153],[250,170,30],[220,220,0],[107,142,35],[152,251,152],
+    [70,130,180],[220,20,60],[255,0,0],[0,0,142],[0,0,70],
+    [0,60,100],[0,80,100],[0,0,230],[119,11,32]
+];
+const LABELS = [
+    "road","sidewalk","building","wall","fence","pole",
+    "traffic light","traffic sign","vegetation","terrain",
+    "sky","person","rider","car","truck","bus","train","motorcycle","bicycle"
+];
+
+let segMaps = null;
+let frameIndices = null;
+let currentFrame = 0;
+let videoFrames = {};
+
+function log(msg) {
+    const el = document.getElementById('log');
+    el.style.display = 'block';
+    el.textContent += msg + '\n';
+    el.scrollTop = el.scrollHeight;
+    console.log('[BEV]', msg);
+}
+
+// Build legend
+const legendEl = document.getElementById('legend');
+LABELS.forEach((label, i) => {
+    const item = document.createElement('span');
+    item.className = 'legend-item';
+    item.style.background = `rgb(${COLORS[i].join(',')})`;
+    item.style.color = COLORS[i][0]+COLORS[i][1]+COLORS[i][2] > 384 ? '#000' : '#fff';
+    item.textContent = label;
+    legendEl.appendChild(item);
+});
+
+// NPZ loader
+document.getElementById('npz-input').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const t0 = performance.now();
+    log(`Loading ${file.name} (${(file.size/1e6).toFixed(1)} MB)...`);
+    document.getElementById('status').textContent = 'Parsing seg maps...';
+
+    const buf = await file.arrayBuffer();
+    log(`ArrayBuffer read: ${(performance.now()-t0).toFixed(0)}ms`);
+    const parsed = parseNPZ(new Uint8Array(buf));
+    const data = await parsed;
+    log(`NPZ parsed: ${(performance.now()-t0).toFixed(0)}ms`);
+    segMaps = data.seg_maps;
+    frameIndices = data.frame_indices;
+    currentFrame = 0;
+    window._segH = data.h;
+    window._segW = data.w;
+
+    log(`Frames: ${segMaps.length}, size: ${data.w}x${data.h}, indices sample: [${frameIndices.slice(0,5).join(',')}...]`);
+    document.getElementById('frame-nav').style.display = 'flex';
+    document.getElementById('frame-slider').max = segMaps.length - 1;
+    document.getElementById('status').textContent =
+        `Loaded ${segMaps.length} frames (${data.w}x${data.h}). Click "Load Video" for overlay, or adjust params now.`;
+    const t1 = performance.now();
+    update();
+    log(`First render: ${(performance.now()-t1).toFixed(0)}ms, total: ${(performance.now()-t0).toFixed(0)}ms`);
+
+    // Add video load button
+    const loadArea = document.getElementById('load-area');
+    if (!document.getElementById('video-btn')) {
+        const btn = document.createElement('button');
+        btn.id = 'video-btn';
+        btn.style.cssText = 'padding:8px 20px;background:#4a9eff;border:none;color:white;border-radius:4px;cursor:pointer;font-size:14px;margin-top:8px;';
+        btn.textContent = 'Load Video (optional)';
+        btn.onclick = () => {
+            const videoInput = document.createElement('input');
+            videoInput.type = 'file';
+            videoInput.accept = 'video/*';
+            videoInput.onchange = async (ev) => {
+                const vfile = ev.target.files[0];
+                const url = URL.createObjectURL(vfile);
+                await extractVideoFrames(url, frameIndices);
+                document.getElementById('status').textContent = `Ready! ${segMaps.length} frames with video overlay.`;
+                update();
+            };
+            videoInput.click();
+        };
+        loadArea.appendChild(btn);
+    }
+});
+
+async function extractVideoFrames(url, indices) {
+    const video = document.createElement('video');
+    video.src = url;
+    video.muted = true;
+    await new Promise(r => { video.onloadedmetadata = r; video.load(); });
+    const fps = 30;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+
+    for (let i = 0; i < indices.length; i++) {
+        const t = indices[i] / fps;
+        video.currentTime = t;
+        await new Promise(r => { video.onseeked = r; });
+        ctx.drawImage(video, 0, 0);
+        videoFrames[i] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if ((i+1) % 50 === 0) {
+            document.getElementById('status').textContent = `Extracting frames... ${i+1}/${indices.length}`;
+        }
+    }
+}
+
+function parseNPZ(data) {
+    const files = {};
+    let offset = 0;
+    const u16 = (o) => data[o] | (data[o+1] << 8);
+    const u32 = (o) => (data[o] | (data[o+1] << 8) | (data[o+2] << 16) | (data[o+3] << 24)) >>> 0;
+    const u64 = (o) => {
+        const lo = u32(o), hi = u32(o+4);
+        return hi * 0x100000000 + lo;
+    };
+    while (offset < data.length - 4) {
+        if (data[offset] !== 0x50 || data[offset+1] !== 0x4B) break;
+        if (data[offset+2] === 0x01 && data[offset+3] === 0x02) break;
+        const fnameLen = u16(offset+26);
+        const extraLen = u16(offset+28);
+        let compSize = u32(offset+18);
+        const method = u16(offset+8);
+        const fname = new TextDecoder().decode(data.slice(offset+30, offset+30+fnameLen));
+        if (compSize === 0xFFFFFFFF) {
+            const extraStart = offset + 30 + fnameLen;
+            const tag = u16(extraStart);
+            if (tag === 0x0001) {
+                compSize = u64(extraStart + 12);
+            }
+        }
+        let fileData = data.slice(offset+30+fnameLen+extraLen, offset+30+fnameLen+extraLen+compSize);
+        if (method === 8) {
+            const compressedData = fileData;
+            const decompress = async () => {
+                const ds = new DecompressionStream('deflate-raw');
+                const writer = ds.writable.getWriter();
+                const reader = ds.readable.getReader();
+                const chunks = [];
+                writer.write(compressedData);
+                writer.close();
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                }
+                const total = chunks.reduce((a,c) => a + c.length, 0);
+                const result = new Uint8Array(total);
+                let off = 0;
+                for (const c of chunks) { result.set(c, off); off += c.length; }
+                return result;
+            };
+            files[fname] = decompress();
+        } else {
+            files[fname] = Promise.resolve(fileData);
+        }
+        offset += 30 + fnameLen + extraLen + compSize;
+    }
+    // Parse .npy format
+    const result = {};
+    const parseNpy = async (name) => {
+        const raw = await files[name];
+        const major = raw[6];
+        let headerLen, dataStart;
+        if (major >= 2) {
+            headerLen = raw[8] | (raw[9] << 8) | (raw[10] << 16) | (raw[11] << 24);
+            dataStart = 12 + headerLen;
+        } else {
+            headerLen = raw[8] | (raw[9] << 8);
+            dataStart = 10 + headerLen;
+        }
+        const header = new TextDecoder().decode(raw.slice(dataStart - headerLen, dataStart));
+        const shapeMatch = header.match(/'shape':\s*\(([^)]+)\)/);
+        const dtypeMatch = header.match(/'descr':\s*'([^']+)'/);
+        const shape = shapeMatch[1].split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+        const dtype = dtypeMatch[1];
+        const dataBytes = raw.slice(dataStart);
+
+        if (dtype.includes('u1') || dtype === '|u1') {
+            return { data: dataBytes, shape, dtype: 'uint8' };
+        } else if (dtype.includes('i8') || dtype.includes('i4')) {
+            const view = new DataView(dataBytes.buffer, dataBytes.byteOffset, dataBytes.byteLength);
+            const itemSize = dtype.includes('i8') ? 8 : 4;
+            const arr = [];
+            for (let i = 0; i < dataBytes.length / itemSize; i++) {
+                arr.push(itemSize === 8 ? Number(view.getBigInt64(i*8, true)) : view.getInt32(i*4, true));
+            }
+            return { data: arr, shape, dtype: 'int' };
+        }
+        return { data: dataBytes, shape, dtype };
+    };
+
+    return (async () => {
+        log('Decompressing seg_maps.npy...');
+        const dt0 = performance.now();
+        const segResult = await parseNpy('seg_maps.npy');
+        log(`seg_maps decompressed: ${(performance.now()-dt0).toFixed(0)}ms, shape=${segResult.shape}, dtype=${segResult.dtype}`);
+        const idxResult = await parseNpy('frame_indices.npy');
+        log(`frame_indices parsed, dtype=${idxResult.dtype}`);
+        const [nFrames, h, w] = segResult.shape;
+        const maps = [];
+        for (let i = 0; i < nFrames; i++) {
+            maps.push(segResult.data.slice(i * h * w, (i+1) * h * w));
+        }
+        return { seg_maps: maps, frame_indices: idxResult.data, h, w };
+    })();
+}
+
+
+function prevFrame() { if (currentFrame > 0) { currentFrame--; document.getElementById('frame-slider').value = currentFrame; update(); } }
+function nextFrame() { if (segMaps && currentFrame < segMaps.length - 1) { currentFrame++; document.getElementById('frame-slider').value = currentFrame; update(); } }
+function setFrame(v) { currentFrame = parseInt(v); update(); }
+
+function getParams() {
+    return {
+        f: parseFloat(document.getElementById('s-f').value),
+        cx: parseFloat(document.getElementById('s-cx').value),
+        cy: parseFloat(document.getElementById('s-cy').value),
+        k1: parseFloat(document.getElementById('s-k1').value),
+        k2: parseFloat(document.getElementById('s-k2').value),
+        h: parseFloat(document.getElementById('s-h').value) * 0.3048,
+        pitch: parseFloat(document.getElementById('s-pitch').value) * Math.PI / 180,
+        roll: parseFloat(document.getElementById('s-roll').value) * Math.PI / 180,
+        yaw: parseFloat(document.getElementById('s-yaw').value) * Math.PI / 180,
+        fwd: parseFloat(document.getElementById('s-fwd').value) * 0.3048,
+        side: parseFloat(document.getElementById('s-side').value) * 0.3048,
+        fwdFt: parseFloat(document.getElementById('s-fwd').value),
+        sideFt: parseFloat(document.getElementById('s-side').value),
+    };
+}
+
+function update() {
+    // Update value displays
+    for (const id of ['f','cx','cy','k1','k2','h','pitch','roll','yaw','fwd','side']) {
+        const slider = document.getElementById('s-' + (id === 'fwd' ? 'fwd' : id === 'side' ? 'side' : id));
+        const valEl = document.getElementById('v-' + (id === 'fwd' ? 'fwd' : id === 'side' ? 'side' : id));
+        if (slider && valEl) {
+            valEl.textContent = parseFloat(slider.value).toFixed(
+                ['k1','k2'].includes(id) ? 3 : ['roll','pitch','yaw'].includes(id) ? 1 :
+                ['h'].includes(id) ? 2 : 0
+            );
+        }
+    }
+
+    if (!segMaps || segMaps.length === 0) return;
+
+    document.getElementById('frame-info').textContent = `${currentFrame + 1} / ${segMaps.length}`;
+
+    const segMap = segMaps[currentFrame];
+    const imgW = window._segW || 640;
+    const imgH = window._segH || 480;
+    const p = getParams();
+
+    // Draw overlay
+    const overlayCanvas = document.getElementById('overlay-canvas');
+    overlayCanvas.width = imgW;
+    overlayCanvas.height = imgH;
+    const octx = overlayCanvas.getContext('2d');
+    const oimg = octx.createImageData(imgW, imgH);
+
+    if (videoFrames[currentFrame]) {
+        const vf = videoFrames[currentFrame];
+        for (let i = 0; i < imgW * imgH; i++) {
+            const cls = segMap[i];
+            const c = cls < 19 ? COLORS[cls] : [0,0,0];
+            oimg.data[i*4]   = Math.round(vf.data[i*4] * 0.55 + c[0] * 0.45);
+            oimg.data[i*4+1] = Math.round(vf.data[i*4+1] * 0.55 + c[1] * 0.45);
+            oimg.data[i*4+2] = Math.round(vf.data[i*4+2] * 0.55 + c[2] * 0.45);
+            oimg.data[i*4+3] = 255;
+        }
+    } else {
+        for (let i = 0; i < imgW * imgH; i++) {
+            const cls = segMap[i];
+            const c = cls < 19 ? COLORS[cls] : [0,0,0];
+            oimg.data[i*4] = c[0]; oimg.data[i*4+1] = c[1]; oimg.data[i*4+2] = c[2]; oimg.data[i*4+3] = 255;
+        }
+    }
+    octx.putImageData(oimg, 0, 0);
+
+    // Draw BEV
+    const bevCanvas = document.getElementById('bev-canvas');
+    const bevSize = 500;
+    bevCanvas.width = bevSize;
+    bevCanvas.height = bevSize;
+    const bctx = bevCanvas.getContext('2d');
+    const bimg = bctx.createImageData(bevSize, bevSize);
+
+    // Rotation matrix
+    const cp = Math.cos(p.pitch), sp = Math.sin(p.pitch);
+    const cr = Math.cos(p.roll), sr = Math.sin(p.roll);
+    const cy = Math.cos(p.yaw), sy = Math.sin(p.yaw);
+
+    const matmul = (A, B) => {
+        const C = [[0,0,0],[0,0,0],[0,0,0]];
+        for (let i=0;i<3;i++) for(let j=0;j<3;j++) for(let k=0;k<3;k++) C[i][j]+=A[i][k]*B[k][j];
+        return C;
+    };
+    const Ryaw = [[cy,-sy,0],[sy,cy,0],[0,0,1]];
+    const Rbase = [[1,0,0],[0,0,-1],[0,1,0]];
+    const Rpitch = [[1,0,0],[0,cp,-sp],[0,sp,cp]];
+    const Rroll = [[cr,-sr,0],[sr,cr,0],[0,0,1]];
+    const R = matmul(Rroll, matmul(Rpitch, matmul(Rbase, Ryaw)));
+
+    // Fill BEV
+    const bg = [30,30,30];
+    for (let by = 0; by < bevSize; by++) {
+        for (let bx = 0; bx < bevSize; bx++) {
+            const idx = (by * bevSize + bx) * 4;
+            const wx = (bx / bevSize - 0.5) * 2 * p.side;
+            const wy = (1 - by / bevSize) * p.fwd;
+
+            if (wy <= 0.15) {
+                bimg.data[idx] = bg[0]; bimg.data[idx+1] = bg[1]; bimg.data[idx+2] = bg[2]; bimg.data[idx+3] = 255;
+                continue;
+            }
+
+            const dx = wx, dy = wy, dz = -p.h;
+            const cx_ = R[0][0]*dx + R[0][1]*dy + R[0][2]*dz;
+            const cy_ = R[1][0]*dx + R[1][1]*dy + R[1][2]*dz;
+            const cz  = R[2][0]*dx + R[2][1]*dy + R[2][2]*dz;
+
+            if (cz <= 0.01) {
+                bimg.data[idx] = bg[0]; bimg.data[idx+1] = bg[1]; bimg.data[idx+2] = bg[2]; bimg.data[idx+3] = 255;
+                continue;
+            }
+
+            const r3d = Math.sqrt(cx_*cx_ + cy_*cy_);
+            const theta = Math.atan2(r3d, cz);
+            if (theta >= Math.PI * 0.47) {
+                bimg.data[idx] = bg[0]; bimg.data[idx+1] = bg[1]; bimg.data[idx+2] = bg[2]; bimg.data[idx+3] = 255;
+                continue;
+            }
+
+            const t2 = theta*theta;
+            const td = theta * (1 + p.k1*t2 + p.k2*t2*t2);
+            const rp = p.f * td;
+
+            let u, v;
+            if (r3d > 1e-8) {
+                u = p.cx + rp * cx_ / r3d;
+                v = p.cy + rp * cy_ / r3d;
+            } else {
+                u = p.cx; v = p.cy;
+            }
+
+            const iu = Math.floor(u), iv = Math.floor(v);
+            if (iu < 0 || iu >= imgW || iv < 0 || iv >= imgH) {
+                bimg.data[idx] = bg[0]; bimg.data[idx+1] = bg[1]; bimg.data[idx+2] = bg[2]; bimg.data[idx+3] = 255;
+                continue;
+            }
+
+            const cls = segMap[iv * imgW + iu];
+            const c = cls < 19 ? COLORS[cls] : bg;
+            bimg.data[idx] = c[0]; bimg.data[idx+1] = c[1]; bimg.data[idx+2] = c[2]; bimg.data[idx+3] = 255;
+        }
+    }
+    bctx.putImageData(bimg, 0, 0);
+
+    // Grid lines
+    bctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    bctx.lineWidth = 1;
+    const FT = 0.3048;
+    for (let d = 10; d <= p.fwdFt; d += 10) {
+        const byG = (1 - d * FT / p.fwd) * bevSize;
+        bctx.beginPath(); bctx.moveTo(0, byG); bctx.lineTo(bevSize, byG); bctx.stroke();
+        bctx.fillStyle = 'rgba(220,220,220,0.8)';
+        bctx.font = '11px system-ui';
+        bctx.fillText(`${d}ft`, 4, byG - 3);
+    }
+    for (let d = -Math.floor(p.sideFt/10)*10; d <= p.sideFt; d += 10) {
+        const bxG = (d / p.sideFt * 0.5 + 0.5) * bevSize;
+        bctx.beginPath(); bctx.moveTo(bxG, 0); bctx.lineTo(bxG, bevSize); bctx.stroke();
+    }
+
+    // Ego triangle
+    bctx.fillStyle = 'white';
+    bctx.beginPath();
+    bctx.moveTo(bevSize/2, bevSize-22);
+    bctx.lineTo(bevSize/2-7, bevSize-8);
+    bctx.lineTo(bevSize/2+7, bevSize-8);
+    bctx.fill();
+}
+
+function exportCalib() {
+    const s = id => parseFloat(document.getElementById('s-'+id).value);
+    const calib = {
+        intrinsics: { focal_length: s('f'), cx: s('cx'), cy: s('cy'), k1: s('k1'), k2: s('k2'), model: "equidistant_fisheye", resolution: [640, 480] },
+        extrinsics: { height_m: s('h') * 0.3048, height_ft: s('h'), pitch_deg: s('pitch'), roll_deg: s('roll'), yaw_deg: s('yaw') },
+        camera: { model: "ELP-USBFHD04H-L170", sensor: "AR0330", fov_diagonal_deg: 170 },
+        road_width_ft: 20,
+        bev_range: { forward_ft: s('fwd'), side_ft: s('side') }
+    };
+    const blob = new Blob([JSON.stringify(calib, null, 2)], {type: 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'camera_calibration.json';
+    a.click();
+}
+
+update();
+</script>
+</body>
+</html>

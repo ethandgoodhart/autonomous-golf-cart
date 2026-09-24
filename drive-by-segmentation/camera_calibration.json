@@ -1,0 +1,31 @@
+{
+  "intrinsics": {
+    "focal_length": 387,
+    "cx": 299,
+    "cy": 194,
+    "k1": 0,
+    "k2": 0,
+    "model": "equidistant_fisheye",
+    "resolution": [
+      640,
+      480
+    ]
+  },
+  "extrinsics": {
+    "height_m": 1.78308,
+    "height_ft": 5.85,
+    "pitch_deg": 3.5,
+    "roll_deg": 0,
+    "yaw_deg": 0
+  },
+  "camera": {
+    "model": "ELP-USBFHD04H-L170",
+    "sensor": "AR0330",
+    "fov_diagonal_deg": 170
+  },
+  "road_width_ft": 20,
+  "bev_range": {
+    "forward_ft": 100,
+    "side_ft": 50
+  }
+}

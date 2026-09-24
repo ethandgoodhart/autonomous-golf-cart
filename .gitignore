@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+node_modules/
+.next/
+*.tsbuildinfo
+.env
+.env.local
+*.log
+*.egg-info/
+build/
+dist/
+
+# runtime artifacts
+cart-api/last_drive.json
+drive-by-rtk/lane-annotator/annotations.json
+drive-by-rtk/lane-annotator/annotations.backup-*.json
+
+# large data / weights
+*.pth
+*.onnx
+*.engine
+*.npz
+Caddy-Training-Data-*/
+eval_output/
+depth_output/
+frame_samples/

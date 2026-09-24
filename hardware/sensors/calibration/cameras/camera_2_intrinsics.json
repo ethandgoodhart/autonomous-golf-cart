@@ -1,0 +1,737 @@
+{
+  "camera_name": "camera_2",
+  "camera_index": 2,
+  "model": "opencv_pinhole_brown",
+  "image_width": 640,
+  "image_height": 480,
+  "board": {
+    "board_type": "charuco",
+    "squares_x": 7,
+    "squares_y": 10,
+    "square_size_mm": 25.0,
+    "marker_size_mm": 18.0,
+    "dictionary": "DICT_5X5_1000",
+    "board_width_mm": 175.0,
+    "board_height_mm": 250.0,
+    "pdf_page": "US Letter portrait",
+    "print_scaling": "100 percent / actual size"
+  },
+  "sample_count": 62,
+  "rms_reprojection_error_px": 0.2084310234176525,
+  "per_view_error_px": {
+    "mean": 0.20649224924243847,
+    "median": 0.16761068715779048,
+    "max": 0.5005746506880424,
+    "values": [
+      0.26431270019131675,
+      0.1363311555134575,
+      0.14943950090944969,
+      0.16177315745105894,
+      0.13603031698244947,
+      0.14382942658304207,
+      0.15879207576520493,
+      0.16776104736706737,
+      0.17971470530126363,
+      0.19010893317538446,
+      0.21324927640833274,
+      0.17589833449492123,
+      0.1584540969088373,
+      0.18020835647136277,
+      0.16373416046284814,
+      0.2606451190505295,
+      0.2830422716231755,
+      0.3403347823832847,
+      0.39728767261018905,
+      0.16746032694851357,
+      0.1870007529138404,
+      0.23364308796370348,
+      0.22288534593491952,
+      0.17707784131807888,
+      0.13792188605128275,
+      0.15581433388737878,
+      0.2665030316827647,
+      0.14315540783371666,
+      0.176938406519008,
+      0.13685822861775016,
+      0.1819068251090117,
+      0.12699841307897503,
+      0.2573878317898619,
+      0.5005746506880424,
+      0.3974434882243821,
+      0.4298847286347612,
+      0.46899063203842106,
+      0.26287221785301307,
+      0.436366158160617,
+      0.35960794280103425,
+      0.25025982665342217,
+      0.16280571952134243,
+      0.1590701773645236,
+      0.1727374516057251,
+      0.1399453670118683,
+      0.12331333359700543,
+      0.3078966910802057,
+      0.1620537849976363,
+      0.1444901788384099,
+      0.14264899262469485,
+      0.17212625723488514,
+      0.17336201255207737,
+      0.16429240162580502,
+      0.15307574138584204,
+      0.13640828369500654,
+      0.135576189153723,
+      0.12757624463479372,
+      0.11839593497052789,
+      0.16461362225689466,
+      0.16438938966239952,
+      0.13689909370488695,
+      0.10234413115725939
+    ]
+  },
+  "camera_matrix": [
+    [
+      425.0841916639701,
+      0.0,
+      321.25942885562944
+    ],
+    [
+      0.0,
+      423.79737478140504,
+      220.30078003036792
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "dist_coeffs": [
+    0.0380140946539485,
+    -0.048368659812500686,
+    0.0002511540096997823,
+    -0.0009874239983143004,
+    0.015942779638364463
+  ],
+  "calibration_flags": 0,
+  "samples": [
+    {
+      "sample": 1,
+      "path": "calibration/samples/camera_2/camera_2_001.jpg",
+      "corners": 37,
+      "signature": [
+        0.6682448387145996,
+        0.7347222566604614,
+        0.13535206019878387
+      ]
+    },
+    {
+      "sample": 2,
+      "path": "calibration/samples/camera_2/camera_2_002.jpg",
+      "corners": 32,
+      "signature": [
+        0.4151100516319275,
+        0.8363001346588135,
+        0.07448823750019073
+      ]
+    },
+    {
+      "sample": 3,
+      "path": "calibration/samples/camera_2/camera_2_003.jpg",
+      "corners": 52,
+      "signature": [
+        0.6569958925247192,
+        0.6805986166000366,
+        0.1584795117378235
+      ]
+    },
+    {
+      "sample": 4,
+      "path": "calibration/samples/camera_2/camera_2_004.jpg",
+      "corners": 54,
+      "signature": [
+        0.6387131810188293,
+        0.5792874693870544,
+        0.19062747061252594
+      ]
+    },
+    {
+      "sample": 5,
+      "path": "calibration/samples/camera_2/camera_2_005.jpg",
+      "corners": 54,
+      "signature": [
+        0.5326403379440308,
+        0.6020963191986084,
+        0.13136881589889526
+      ]
+    },
+    {
+      "sample": 6,
+      "path": "calibration/samples/camera_2/camera_2_006.jpg",
+      "corners": 54,
+      "signature": [
+        0.45291584730148315,
+        0.49501746892929077,
+        0.1397169530391693
+      ]
+    },
+    {
+      "sample": 7,
+      "path": "calibration/samples/camera_2/camera_2_007.jpg",
+      "corners": 54,
+      "signature": [
+        0.448294073343277,
+        0.39281755685806274,
+        0.11010333895683289
+      ]
+    },
+    {
+      "sample": 8,
+      "path": "calibration/samples/camera_2/camera_2_008.jpg",
+      "corners": 54,
+      "signature": [
+        0.46275171637535095,
+        0.4933386743068695,
+        0.16026003658771515
+      ]
+    },
+    {
+      "sample": 9,
+      "path": "calibration/samples/camera_2/camera_2_009.jpg",
+      "corners": 54,
+      "signature": [
+        0.42411279678344727,
+        0.38813889026641846,
+        0.19515414535999298
+      ]
+    },
+    {
+      "sample": 10,
+      "path": "calibration/samples/camera_2/camera_2_010.jpg",
+      "corners": 54,
+      "signature": [
+        0.461698055267334,
+        0.4984312057495117,
+        0.16196663677692413
+      ]
+    },
+    {
+      "sample": 11,
+      "path": "calibration/samples/camera_2/camera_2_011.jpg",
+      "corners": 48,
+      "signature": [
+        0.4542287290096283,
+        0.6042366623878479,
+        0.08649355918169022
+      ]
+    },
+    {
+      "sample": 12,
+      "path": "calibration/samples/camera_2/camera_2_012.jpg",
+      "corners": 54,
+      "signature": [
+        0.363996297121048,
+        0.6515095829963684,
+        0.17636604607105255
+      ]
+    },
+    {
+      "sample": 13,
+      "path": "calibration/samples/camera_2/camera_2_013.jpg",
+      "corners": 54,
+      "signature": [
+        0.3619482219219208,
+        0.5327980518341064,
+        0.20569521188735962
+      ]
+    },
+    {
+      "sample": 14,
+      "path": "calibration/samples/camera_2/camera_2_014.jpg",
+      "corners": 52,
+      "signature": [
+        0.364380419254303,
+        0.49974536895751953,
+        0.11712514609098434
+      ]
+    },
+    {
+      "sample": 15,
+      "path": "calibration/samples/camera_2/camera_2_015.jpg",
+      "corners": 54,
+      "signature": [
+        0.4094451069831848,
+        0.394663006067276,
+        0.07202746719121933
+      ]
+    },
+    {
+      "sample": 16,
+      "path": "calibration/samples/camera_2/camera_2_016.jpg",
+      "corners": 54,
+      "signature": [
+        0.4317317008972168,
+        0.21613304316997528,
+        0.08714765310287476
+      ]
+    },
+    {
+      "sample": 17,
+      "path": "calibration/samples/camera_2/camera_2_017.jpg",
+      "corners": 43,
+      "signature": [
+        0.4784388542175293,
+        0.33211037516593933,
+        0.08897547423839569
+      ]
+    },
+    {
+      "sample": 18,
+      "path": "calibration/samples/camera_2/camera_2_018.jpg",
+      "corners": 54,
+      "signature": [
+        0.4788331985473633,
+        0.44535762071609497,
+        0.08652480691671371
+      ]
+    },
+    {
+      "sample": 19,
+      "path": "calibration/samples/camera_2/camera_2_019.jpg",
+      "corners": 53,
+      "signature": [
+        0.5181210041046143,
+        0.5502670407295227,
+        0.11585651338100433
+      ]
+    },
+    {
+      "sample": 20,
+      "path": "calibration/samples/camera_2/camera_2_020.jpg",
+      "corners": 54,
+      "signature": [
+        0.40416282415390015,
+        0.49754956364631653,
+        0.17434117197990417
+      ]
+    },
+    {
+      "sample": 21,
+      "path": "calibration/samples/camera_2/camera_2_021.jpg",
+      "corners": 54,
+      "signature": [
+        0.376166433095932,
+        0.462960422039032,
+        0.26471665501594543
+      ]
+    },
+    {
+      "sample": 22,
+      "path": "calibration/samples/camera_2/camera_2_022.jpg",
+      "corners": 48,
+      "signature": [
+        0.49488067626953125,
+        0.47131669521331787,
+        0.3630296587944031
+      ]
+    },
+    {
+      "sample": 23,
+      "path": "calibration/samples/camera_2/camera_2_023.jpg",
+      "corners": 54,
+      "signature": [
+        0.5372081995010376,
+        0.6119770407676697,
+        0.3099003732204437
+      ]
+    },
+    {
+      "sample": 24,
+      "path": "calibration/samples/camera_2/camera_2_024.jpg",
+      "corners": 54,
+      "signature": [
+        0.4793083667755127,
+        0.5607866644859314,
+        0.13677014410495758
+      ]
+    },
+    {
+      "sample": 25,
+      "path": "calibration/samples/camera_2/camera_2_025.jpg",
+      "corners": 50,
+      "signature": [
+        0.4011920094490051,
+        0.4575265347957611,
+        0.09026589244604111
+      ]
+    },
+    {
+      "sample": 26,
+      "path": "calibration/samples/camera_2/camera_2_026.jpg",
+      "corners": 52,
+      "signature": [
+        0.2955774664878845,
+        0.39998161792755127,
+        0.10142546892166138
+      ]
+    },
+    {
+      "sample": 27,
+      "path": "calibration/samples/camera_2/camera_2_027.jpg",
+      "corners": 54,
+      "signature": [
+        0.39627498388290405,
+        0.38848230242729187,
+        0.0709560438990593
+      ]
+    },
+    {
+      "sample": 28,
+      "path": "calibration/samples/camera_2/camera_2_028.jpg",
+      "corners": 54,
+      "signature": [
+        0.42944440245628357,
+        0.49282366037368774,
+        0.09014478325843811
+      ]
+    },
+    {
+      "sample": 29,
+      "path": "calibration/samples/camera_2/camera_2_029.jpg",
+      "corners": 54,
+      "signature": [
+        0.4725014269351959,
+        0.42747601866722107,
+        0.17117662727832794
+      ]
+    },
+    {
+      "sample": 30,
+      "path": "calibration/samples/camera_2/camera_2_030.jpg",
+      "corners": 48,
+      "signature": [
+        0.6633449792861938,
+        0.5012422204017639,
+        0.2374359518289566
+      ]
+    },
+    {
+      "sample": 31,
+      "path": "calibration/samples/camera_2/camera_2_031.jpg",
+      "corners": 46,
+      "signature": [
+        0.70688796043396,
+        0.5750558972358704,
+        0.15524566173553467
+      ]
+    },
+    {
+      "sample": 32,
+      "path": "calibration/samples/camera_2/camera_2_032.jpg",
+      "corners": 28,
+      "signature": [
+        0.7998589277267456,
+        0.6923142671585083,
+        0.09723594039678574
+      ]
+    },
+    {
+      "sample": 33,
+      "path": "calibration/samples/camera_2/camera_2_033.jpg",
+      "corners": 34,
+      "signature": [
+        0.7362867593765259,
+        0.5498188138008118,
+        0.0517275333404541
+      ]
+    },
+    {
+      "sample": 34,
+      "path": "calibration/samples/camera_2/camera_2_034.jpg",
+      "corners": 19,
+      "signature": [
+        0.6881288886070251,
+        0.4492158591747284,
+        0.022945603355765343
+      ]
+    },
+    {
+      "sample": 35,
+      "path": "calibration/samples/camera_2/camera_2_035.jpg",
+      "corners": 35,
+      "signature": [
+        0.7912200093269348,
+        0.49184486269950867,
+        0.037847939878702164
+      ]
+    },
+    {
+      "sample": 36,
+      "path": "calibration/samples/camera_2/camera_2_036.jpg",
+      "corners": 18,
+      "signature": [
+        0.8072948455810547,
+        0.5951808094978333,
+        0.03491583466529846
+      ]
+    },
+    {
+      "sample": 37,
+      "path": "calibration/samples/camera_2/camera_2_037.jpg",
+      "corners": 27,
+      "signature": [
+        0.7962761521339417,
+        0.49088427424430847,
+        0.035260722041130066
+      ]
+    },
+    {
+      "sample": 38,
+      "path": "calibration/samples/camera_2/camera_2_038.jpg",
+      "corners": 19,
+      "signature": [
+        0.8195453882217407,
+        0.33264580368995667,
+        0.03182964771986008
+      ]
+    },
+    {
+      "sample": 39,
+      "path": "calibration/samples/camera_2/camera_2_039.jpg",
+      "corners": 22,
+      "signature": [
+        0.3188069462776184,
+        0.5970999598503113,
+        0.03146311640739441
+      ]
+    },
+    {
+      "sample": 40,
+      "path": "calibration/samples/camera_2/camera_2_040.jpg",
+      "corners": 28,
+      "signature": [
+        0.5556007027626038,
+        0.46800556778907776,
+        0.03365229815244675
+      ]
+    },
+    {
+      "sample": 41,
+      "path": "calibration/samples/camera_2/camera_2_041.jpg",
+      "corners": 52,
+      "signature": [
+        0.4539563059806824,
+        0.43575796484947205,
+        0.07737154513597488
+      ]
+    },
+    {
+      "sample": 42,
+      "path": "calibration/samples/camera_2/camera_2_042.jpg",
+      "corners": 54,
+      "signature": [
+        0.45466798543930054,
+        0.33367595076560974,
+        0.10081356763839722
+      ]
+    },
+    {
+      "sample": 43,
+      "path": "calibration/samples/camera_2/camera_2_043.jpg",
+      "corners": 54,
+      "signature": [
+        0.5675604343414307,
+        0.3361101746559143,
+        0.11091424524784088
+      ]
+    },
+    {
+      "sample": 44,
+      "path": "calibration/samples/camera_2/camera_2_044.jpg",
+      "corners": 54,
+      "signature": [
+        0.7083401679992676,
+        0.3202213943004608,
+        0.11873022466897964
+      ]
+    },
+    {
+      "sample": 45,
+      "path": "calibration/samples/camera_2/camera_2_045.jpg",
+      "corners": 54,
+      "signature": [
+        0.5990027189254761,
+        0.3585814833641052,
+        0.09008486568927765
+      ]
+    },
+    {
+      "sample": 46,
+      "path": "calibration/samples/camera_2/camera_2_046.jpg",
+      "corners": 48,
+      "signature": [
+        0.3633677661418915,
+        0.38464370369911194,
+        0.07511132210493088
+      ]
+    },
+    {
+      "sample": 47,
+      "path": "calibration/samples/camera_2/camera_2_047.jpg",
+      "corners": 54,
+      "signature": [
+        0.2035827338695526,
+        0.3978768587112427,
+        0.07430114597082138
+      ]
+    },
+    {
+      "sample": 48,
+      "path": "calibration/samples/camera_2/camera_2_048.jpg",
+      "corners": 54,
+      "signature": [
+        0.20383110642433167,
+        0.502953827381134,
+        0.08896181732416153
+      ]
+    },
+    {
+      "sample": 49,
+      "path": "calibration/samples/camera_2/camera_2_049.jpg",
+      "corners": 47,
+      "signature": [
+        0.19115307927131653,
+        0.6951531171798706,
+        0.11328544467687607
+      ]
+    },
+    {
+      "sample": 50,
+      "path": "calibration/samples/camera_2/camera_2_050.jpg",
+      "corners": 53,
+      "signature": [
+        0.2501213848590851,
+        0.5824262499809265,
+        0.10541291534900665
+      ]
+    },
+    {
+      "sample": 51,
+      "path": "calibration/samples/camera_2/camera_2_051.jpg",
+      "corners": 54,
+      "signature": [
+        0.3181379437446594,
+        0.4647616446018219,
+        0.15546682476997375
+      ]
+    },
+    {
+      "sample": 52,
+      "path": "calibration/samples/camera_2/camera_2_052.jpg",
+      "corners": 54,
+      "signature": [
+        0.4350908696651459,
+        0.40870043635368347,
+        0.20636871457099915
+      ]
+    },
+    {
+      "sample": 53,
+      "path": "calibration/samples/camera_2/camera_2_053.jpg",
+      "corners": 54,
+      "signature": [
+        0.6005005836486816,
+        0.3995305001735687,
+        0.1301862895488739
+      ]
+    },
+    {
+      "sample": 54,
+      "path": "calibration/samples/camera_2/camera_2_054.jpg",
+      "corners": 54,
+      "signature": [
+        0.7566045522689819,
+        0.575407862663269,
+        0.13686227798461914
+      ]
+    },
+    {
+      "sample": 55,
+      "path": "calibration/samples/camera_2/camera_2_055.jpg",
+      "corners": 48,
+      "signature": [
+        0.7104434967041016,
+        0.46996960043907166,
+        0.11277806013822556
+      ]
+    },
+    {
+      "sample": 56,
+      "path": "calibration/samples/camera_2/camera_2_056.jpg",
+      "corners": 54,
+      "signature": [
+        0.5637467503547668,
+        0.4547167718410492,
+        0.11628077924251556
+      ]
+    },
+    {
+      "sample": 57,
+      "path": "calibration/samples/camera_2/camera_2_057.jpg",
+      "corners": 54,
+      "signature": [
+        0.4572603106498718,
+        0.4167916476726532,
+        0.11768553406000137
+      ]
+    },
+    {
+      "sample": 58,
+      "path": "calibration/samples/camera_2/camera_2_058.jpg",
+      "corners": 54,
+      "signature": [
+        0.3547280728816986,
+        0.5090784430503845,
+        0.1263655424118042
+      ]
+    },
+    {
+      "sample": 59,
+      "path": "calibration/samples/camera_2/camera_2_059.jpg",
+      "corners": 54,
+      "signature": [
+        0.36631616950035095,
+        0.39135780930519104,
+        0.14393599331378937
+      ]
+    },
+    {
+      "sample": 60,
+      "path": "calibration/samples/camera_2/camera_2_060.jpg",
+      "corners": 54,
+      "signature": [
+        0.4704744219779968,
+        0.48149338364601135,
+        0.12914495170116425
+      ]
+    },
+    {
+      "sample": 61,
+      "path": "calibration/samples/camera_2/camera_2_061.jpg",
+      "corners": 54,
+      "signature": [
+        0.48720741271972656,
+        0.6352376937866211,
+        0.12914592027664185
+      ]
+    },
+    {
+      "sample": 62,
+      "path": "calibration/samples/camera_2/camera_2_062.jpg",
+      "corners": 54,
+      "signature": [
+        0.3857828378677368,
+        0.6219267249107361,
+        0.10712645947933197
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+@keyframes gps-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(68, 255, 68, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba(68, 255, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(68, 255, 68, 0); }
+}
+
+.gps-pulse-dot {
+  animation: gps-pulse 1.5s infinite;
+}

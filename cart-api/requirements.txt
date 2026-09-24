@@ -1,0 +1,5 @@
+# cartlib runtime dependencies.
+# pyserial is the only hard requirement — steering talks to the ODrive over
+# its ASCII protocol, so the heavyweight `odrive`/`fibre` packages are NOT
+# needed. (pyserial 3.5 is already present system-wide on the cart Jetson.)
+pyserial>=3.5

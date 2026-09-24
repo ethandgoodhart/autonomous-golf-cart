@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cartlib"
+version = "1.0.0"
+description = "Python control library for the autonomous golf cart: RTK GPS, steering, gas and brake."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = ["pyserial>=3.5"]
+
+[project.optional-dependencies]
+server = ["websockets>=12"]
+
+[tool.setuptools]
+packages = ["cartlib"]

@@ -1,0 +1,9 @@
+# Local (live.py, render*, path_planning.py)
+numpy
+opencv-python
+scipy
+Pillow
+torch
+transformers
+# Cloud GPU jobs (*_modal.py)
+modal

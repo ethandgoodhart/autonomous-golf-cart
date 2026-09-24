@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FollowRTK Lane Annotator</title>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="map"></div>
+
+  <div id="panel">
+    <h2>Lane Annotator</h2>
+    <p class="subtitle">Self-Driving Golf Cart - Stanford Campus</p>
+
+    <div class="section" id="gps-panel">
+      <label>Live GPS</label>
+      <div id="gps-status" class="gps-status disconnected">
+        <div class="gps-fix-row">
+          <span id="gps-fix-badge" class="fix-badge">NO GPS</span>
+          <span id="gps-hz" class="gps-hz"></span>
+        </div>
+        <div class="gps-coords">
+          <span id="gps-lat">--</span>, <span id="gps-lon">--</span>
+        </div>
+        <div class="gps-meta">
+          <span>Sats: <strong id="gps-sats">--</strong></span>
+          <span>HDOP: <strong id="gps-hdop">--</strong></span>
+          <span>Alt: <strong id="gps-alt">--</strong></span>
+        </div>
+      </div>
+      <div id="gps-point-count" class="gps-point-count">0 points collected</div>
+      <div class="btn-row" style="margin-top: 6px;">
+        <button id="btn-save-gps" class="action-btn new">Save GPS</button>
+        <button id="btn-clear-gps" class="action-btn delete">Clear</button>
+      </div>
+      <div class="btn-row">
+        <button id="btn-follow" class="action-btn follow active">Follow GPS</button>
+        <button id="btn-clear-trail" class="action-btn undo">Clear Trail</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>Mode</label>
+      <div class="mode-buttons">
+        <button id="btn-lane" class="mode-btn active" data-mode="lane">Lane</button>
+        <button id="btn-connector" class="mode-btn" data-mode="connector">Connector</button>
+        <button id="btn-eraser" class="mode-btn" data-mode="eraser">Eraser</button>
+      </div>
+    </div>
+
+    <div class="section" id="lane-controls">
+      <label for="line-name">Road Name</label>
+      <input type="text" id="line-name" placeholder="e.g. Palm Drive">
+      <p class="hint">Draw 2 lane boundaries with the same name to auto-generate a center line.</p>
+      <div class="btn-row" style="margin-top: 6px;">
+        <button id="btn-new" class="action-btn new">New Line</button>
+        <button id="btn-finish" class="action-btn finish">Finish Line</button>
+      </div>
+      <div class="btn-row">
+        <button id="btn-undo" class="action-btn undo">Undo Point</button>
+        <button id="btn-delete" class="action-btn delete">Delete Line</button>
+      </div>
+    </div>
+
+    <div class="section hidden" id="connector-controls">
+      <label for="connector-name">Connector Name</label>
+      <input type="text" id="connector-name" placeholder="e.g. Palm-Serra Junction">
+      <p class="hint">Points snap to nearby lane boundary points. Click near a lane point to connect.</p>
+      <div class="btn-row" style="margin-top: 6px;">
+        <button id="btn-new-connector" class="action-btn new">New Connector</button>
+        <button id="btn-finish-connector" class="action-btn finish">Finish</button>
+      </div>
+      <div class="btn-row">
+        <button id="btn-undo-connector" class="action-btn undo">Undo Point</button>
+        <button id="btn-delete-connector" class="action-btn delete">Delete</button>
+      </div>
+    </div>
+
+    <div class="section hidden" id="eraser-controls">
+      <label>Eraser Radius</label>
+      <div class="slider-row">
+        <input type="range" id="eraser-radius" min="2" max="30" value="8">
+        <span id="eraser-radius-val">8m</span>
+      </div>
+      <p class="hint">Click near a center line to erase a section. Click an eraser marker to remove it.</p>
+      <div class="btn-row" style="margin-top: 6px;">
+        <button id="btn-undo-eraser" class="action-btn undo">Undo Eraser</button>
+        <button id="btn-clear-erasers" class="action-btn delete">Clear All</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="btn-row">
+        <button id="btn-save" class="action-btn save">Save to JSON</button>
+        <button id="btn-load" class="action-btn load">Load JSON</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>Center Lines (auto)</label>
+      <label class="toggle-row">
+        <input type="checkbox" id="chk-connector-centers"> Connector center lines
+      </label>
+      <p class="hint">Drag center line points to adjust. Click a point to delete it.</p>
+      <div id="center-line-list"></div>
+    </div>
+
+    <div class="section">
+      <label>Connectors (<span id="connector-count">0</span>)</label>
+      <div id="connector-list"></div>
+    </div>
+
+    <div class="section">
+      <label>Lane Boundaries (<span id="annotation-count">0</span>)</label>
+      <div id="annotation-list"></div>
+    </div>
+
+    <div id="status-bar">Click on the map to add points</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

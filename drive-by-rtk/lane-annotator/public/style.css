@@ -1,0 +1,391 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#panel {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 280px;
+  max-height: calc(100vh - 24px);
+  background: rgba(24, 24, 32, 0.92);
+  color: #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  overflow-y: auto;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+#panel h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.section {
+  margin-bottom: 14px;
+}
+
+.section label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #999;
+  margin-bottom: 6px;
+}
+
+.hint {
+  font-size: 11px;
+  color: #777;
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 10px 4px;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background: transparent;
+  color: #ccc;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mode-btn:hover {
+  border-color: #666;
+  color: #fff;
+}
+
+.mode-btn.active[data-mode="lane"] {
+  border-color: #44ff88;
+  background: rgba(68, 255, 136, 0.12);
+  color: #66ffaa;
+}
+
+.mode-btn.active[data-mode="connector"] {
+  border-color: #4488ff;
+  background: rgba(68, 136, 255, 0.15);
+  color: #66aaff;
+}
+
+.mode-btn.active[data-mode="eraser"] {
+  border-color: #ff8800;
+  background: rgba(255, 136, 0, 0.15);
+  color: #ffaa44;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+
+input[type="text"]:focus {
+  border-color: #666;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: #ff8800;
+}
+
+.slider-row span {
+  font-size: 12px;
+  color: #ccc;
+  min-width: 32px;
+  text-align: right;
+}
+
+.btn-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.btn-row:last-child {
+  margin-bottom: 0;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.action-btn.new {
+  background: #2a6b2a;
+  color: #8f8;
+}
+.action-btn.new:hover { background: #3a8b3a; }
+
+.action-btn.finish {
+  background: #2a4a6b;
+  color: #8cf;
+}
+.action-btn.finish:hover { background: #3a5a8b; }
+
+.action-btn.undo {
+  background: #6b5a2a;
+  color: #fc8;
+}
+.action-btn.undo:hover { background: #8b7a3a; }
+
+.action-btn.delete {
+  background: #6b2a2a;
+  color: #f88;
+}
+.action-btn.delete:hover { background: #8b3a3a; }
+
+.action-btn.save {
+  background: #2a5a6b;
+  color: #8ef;
+}
+.action-btn.save:hover { background: #3a7a8b; }
+
+.action-btn.load {
+  background: #4a3a6b;
+  color: #c8f;
+}
+.action-btn.load:hover { background: #5a4a8b; }
+
+#annotation-list, #center-line-list, #connector-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.annotation-item, .center-line-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.annotation-item:hover, .center-line-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.annotation-item.selected {
+  background: rgba(255, 255, 255, 0.15);
+  outline: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.annotation-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.annotation-dot.lane { background: #44ff88; }
+.annotation-dot.connector { background: #4488ff; }
+.annotation-dot.center { background: #ffcc00; }
+
+.annotation-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.annotation-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #ddd;
+}
+
+.annotation-meta {
+  font-size: 10px;
+  color: #777;
+}
+
+.annotation-delete-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.annotation-delete-btn:hover {
+  color: #ff4444;
+}
+
+#status-bar {
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 11px;
+  color: #aaa;
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* GPS panel */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #ccc;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.toggle-row input[type="checkbox"] {
+  accent-color: #ffcc00;
+}
+
+.gps-status {
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+}
+
+.gps-status.disconnected {
+  opacity: 0.5;
+}
+
+.gps-fix-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.fix-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #555;
+  color: #aaa;
+}
+
+.fix-badge.rtk-fix { background: #1a6b1a; color: #4f4; }
+.fix-badge.rtk-float { background: #6b5a1a; color: #fc4; }
+.fix-badge.dgps { background: #6b3a1a; color: #fa4; }
+.fix-badge.gps { background: #6b1a1a; color: #f44; }
+
+.gps-hz {
+  font-size: 11px;
+  color: #888;
+}
+
+.gps-coords {
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: 11px;
+  color: #ccc;
+  margin-bottom: 4px;
+}
+
+.gps-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: #999;
+}
+
+.gps-meta strong {
+  color: #ccc;
+}
+
+.gps-point-count {
+  text-align: center;
+  font-size: 11px;
+  color: #999;
+  margin-top: 6px;
+}
+
+.action-btn.follow {
+  background: #1a4a1a;
+  color: #8f8;
+}
+.action-btn.follow:hover { background: #2a6a2a; }
+.action-btn.follow.active {
+  background: #2a7b2a;
+  color: #4f4;
+}
+
+/* Pulsing GPS dot */
+@keyframes gps-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.gps-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid white;
+  animation: gps-pulse 1.5s infinite;
+  pointer-events: none;
+}
+
+.mapboxgl-ctrl-attrib {
+  font-size: 10px !important;
+}

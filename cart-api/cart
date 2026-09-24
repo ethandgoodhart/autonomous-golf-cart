@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# cart — one-command launcher for the FollowRTK cart API.
+#
+#   ./cart test                       read-only self-test of all 3 subsystems
+#   ./cart read [--ntrip]             live read-only dashboard
+#   ./cart record PATH [--ntrip ...]  drive manually, record an RTK path
+#   ./cart drive PATH [--max-speed X] DRIVE the path live (hand on e-stop)
+#   ./cart follow PATH [--go ...]     preview a path (dry-run unless --go)
+#   ./cart serve [--ntrip --gps-only] web bridge: map + click-to-drive (ws 8765)
+#   ./cart brake | steer | gas        live actuation demos
+#
+# All extra args after the subcommand are passed straight through.
+set -euo pipefail
+cd "$(dirname "$0")"
+PY=${PYTHON:-python3}
+
+cmd=${1:-help}; shift || true
+case "$cmd" in
+  test|selftest) exec "$PY" selftest.py "$@" ;;
+  read)          exec "$PY" examples/read_all.py "$@" ;;
+  record)        exec "$PY" examples/record_path.py "$@" ;;
+  drive)         exec "$PY" examples/follow_path.py "$@" --go ;;
+  follow)        exec "$PY" examples/follow_path.py "$@" ;;
+  serve)         exec "$PY" -m cartlib.server "$@" ;;
+  brake)         exec "$PY" examples/actuation_demo.py --brake "$@" ;;
+  steer)         exec "$PY" examples/actuation_demo.py --steer "$@" ;;
+  gas)           exec "$PY" examples/actuation_demo.py --gas "$@" ;;
+  help|-h|--help)
+    awk 'NR>1 && /^#/{sub(/^# ?/,""); print; next} NR>1{exit}' "$0"
+    ;;
+  *)
+    echo "unknown command: $cmd" >&2
+    awk 'NR>1 && /^#/{sub(/^# ?/,""); print; next} NR>1{exit}' "$0" >&2
+    exit 2 ;;
+esac

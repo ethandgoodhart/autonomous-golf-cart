@@ -1,0 +1,157 @@
+{
+  "type": "sparsedrive_live_real_pvc_calibration",
+  "date": "2026-05-20",
+  "source_files": {
+    "camera_mapping": "calibration/cameras/camera_mapping.json",
+    "manual_extrinsics": "calibration/cameras/REAL_manual_extrinsics_front_reference.json"
+  },
+  "frame_convention": {
+    "ego": "x forward, y left, z up, meters; origin is the REAL front camera center for this temporary PVC rig",
+    "camera": "OpenCV: x right, y down, z forward"
+  },
+  "model_input_size": [704, 256],
+  "capture_size": [320, 240],
+  "calibrated_image_size": [640, 480],
+  "notes": [
+    "Only three REAL PVC cameras are calibrated right now.",
+    "SparseDrive requires six camera slots, so rear slots intentionally reuse the three real calibrated feeds until the remaining cameras are installed and calibrated.",
+    "front_left and front_right are 15.875 inches from front along the pipe; yaw offsets are +55 and -55 degrees."
+  ],
+  "slots": [
+    {
+      "slot": "CAM_FRONT",
+      "source": "/dev/video4",
+      "physical_position": "front",
+      "image_size": [640, 480],
+      "intrinsics": [
+        [427.9462668329433, 0.0, 316.95398853680877],
+        [0.0, 427.07675500115397, 247.47619942431572],
+        [0.0, 0.0, 1.0]
+      ],
+      "distortion_model": "opencv_pinhole_brown",
+      "distortion_coeffs": [0.03780731903742179, -0.052907627495843046, 0.0007149492431333365, -0.00010074676212741734, 0.009001394418216667],
+      "target_hfov_deg": 70.0,
+      "camera_center_ego_m": [0.0, 0.0, 0.0],
+      "camera_yaw_deg": 0.0,
+      "ego_to_camera": [
+        [0.0, -1.0, 0.0, 0.0],
+        [0.0, 0.0, -1.0, 0.0],
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "notes": "REAL center front PVC camera."
+    },
+    {
+      "slot": "CAM_FRONT_RIGHT",
+      "source": "/dev/video0",
+      "physical_position": "front_right",
+      "image_size": [640, 480],
+      "intrinsics": [
+        [427.2923474824809, 0.0, 307.06247121744633],
+        [0.0, 425.9410803675529, 222.1681612748878],
+        [0.0, 0.0, 1.0]
+      ],
+      "distortion_model": "opencv_pinhole_brown",
+      "distortion_coeffs": [0.03414274392017816, -0.03404854635633698, 0.0024017573995259197, -0.0019182475034516375, 0.0000899564806028007],
+      "target_hfov_deg": 70.0,
+      "camera_center_ego_m": [0.0, -0.403225, 0.0],
+      "camera_yaw_deg": -55.0,
+      "ego_to_camera": [
+        [-0.8191520442889918, -0.5735764363510462, 0.0, -0.23128035854765058],
+        [0.0, 0.0, -1.0, 0.0],
+        [0.5735764363510462, -0.8191520442889918, 0.0, -0.33030258305842874],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "notes": "REAL right PVC camera, 15.875 in right of front, yaw -55 deg."
+    },
+    {
+      "slot": "CAM_FRONT_LEFT",
+      "source": "/dev/video2",
+      "physical_position": "front_left",
+      "image_size": [640, 480],
+      "intrinsics": [
+        [425.0841916639701, 0.0, 321.25942885562944],
+        [0.0, 423.79737478140504, 220.30078003036792],
+        [0.0, 0.0, 1.0]
+      ],
+      "distortion_model": "opencv_pinhole_brown",
+      "distortion_coeffs": [0.0380140946539485, -0.048368659812500686, 0.0002511540096997823, -0.0009874239983143004, 0.015942779638364463],
+      "target_hfov_deg": 70.0,
+      "camera_center_ego_m": [0.0, 0.403225, 0.0],
+      "camera_yaw_deg": 55.0,
+      "ego_to_camera": [
+        [0.8191520442889918, -0.5735764363510462, 0.0, 0.23128035854765058],
+        [0.0, 0.0, -1.0, 0.0],
+        [0.5735764363510462, 0.8191520442889918, 0.0, -0.33030258305842874],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "notes": "REAL left PVC camera, 15.875 in left of front, yaw +55 deg."
+    },
+    {
+      "slot": "CAM_BACK",
+      "source": "/dev/video4",
+      "physical_position": "front_duplicate_for_back",
+      "image_size": [640, 480],
+      "intrinsics": [
+        [427.9462668329433, 0.0, 316.95398853680877],
+        [0.0, 427.07675500115397, 247.47619942431572],
+        [0.0, 0.0, 1.0]
+      ],
+      "distortion_model": "opencv_pinhole_brown",
+      "distortion_coeffs": [0.03780731903742179, -0.052907627495843046, 0.0007149492431333365, -0.00010074676212741734, 0.009001394418216667],
+      "camera_center_ego_m": [0.0, 0.0, 0.0],
+      "camera_yaw_deg": 0.0,
+      "ego_to_camera": [
+        [0.0, -1.0, 0.0, 0.0],
+        [0.0, 0.0, -1.0, 0.0],
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "notes": "Temporary duplicate of CAM_FRONT until a rear camera is calibrated."
+    },
+    {
+      "slot": "CAM_BACK_LEFT",
+      "source": "/dev/video2",
+      "physical_position": "front_left_duplicate_for_back_left",
+      "image_size": [640, 480],
+      "intrinsics": [
+        [425.0841916639701, 0.0, 321.25942885562944],
+        [0.0, 423.79737478140504, 220.30078003036792],
+        [0.0, 0.0, 1.0]
+      ],
+      "distortion_model": "opencv_pinhole_brown",
+      "distortion_coeffs": [0.0380140946539485, -0.048368659812500686, 0.0002511540096997823, -0.0009874239983143004, 0.015942779638364463],
+      "camera_center_ego_m": [0.0, 0.403225, 0.0],
+      "camera_yaw_deg": 55.0,
+      "ego_to_camera": [
+        [0.8191520442889918, -0.5735764363510462, 0.0, 0.23128035854765058],
+        [0.0, 0.0, -1.0, 0.0],
+        [0.5735764363510462, 0.8191520442889918, 0.0, -0.33030258305842874],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "notes": "Temporary duplicate of CAM_FRONT_LEFT until a rear-left camera is calibrated."
+    },
+    {
+      "slot": "CAM_BACK_RIGHT",
+      "source": "/dev/video0",
+      "physical_position": "front_right_duplicate_for_back_right",
+      "image_size": [640, 480],
+      "intrinsics": [
+        [427.2923474824809, 0.0, 307.06247121744633],
+        [0.0, 425.9410803675529, 222.1681612748878],
+        [0.0, 0.0, 1.0]
+      ],
+      "distortion_model": "opencv_pinhole_brown",
+      "distortion_coeffs": [0.03414274392017816, -0.03404854635633698, 0.0024017573995259197, -0.0019182475034516375, 0.0000899564806028007],
+      "camera_center_ego_m": [0.0, -0.403225, 0.0],
+      "camera_yaw_deg": -55.0,
+      "ego_to_camera": [
+        [-0.8191520442889918, -0.5735764363510462, 0.0, -0.23128035854765058],
+        [0.0, 0.0, -1.0, 0.0],
+        [0.5735764363510462, -0.8191520442889918, 0.0, -0.33030258305842874],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "notes": "Temporary duplicate of CAM_FRONT_RIGHT until a rear-right camera is calibrated."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "followrtk-lane-annotator",
+  "version": "1.0.0",
+  "description": "Lane annotation tool for self-driving golf cart on Stanford campus",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}

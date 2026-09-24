@@ -1,0 +1,26 @@
+{
+  "calibrated_resolution": {
+    "width": 640,
+    "height": 480
+  },
+  "mappings": [
+    {
+      "camera_index": 0,
+      "logical_name": "front_right",
+      "intrinsics": "REAL_front_right_intrinsics.json",
+      "source": "real_charuco_calibration_2026-05-20"
+    },
+    {
+      "camera_index": 2,
+      "logical_name": "front_left",
+      "intrinsics": "REAL_front_left_intrinsics.json",
+      "source": "real_charuco_calibration_2026-05-20"
+    },
+    {
+      "camera_index": 4,
+      "logical_name": "front",
+      "intrinsics": "REAL_front_intrinsics.json",
+      "source": "real_charuco_calibration_2026-05-20"
+    }
+  ]
+}
