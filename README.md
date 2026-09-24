@@ -18,7 +18,7 @@
 <p>
   <a href="#architecture">Architecture</a> ·
   <a href="#quick-start">Quick start</a> ·
-  <a href="#cart-api">Cart API</a> ·
+  <a href="#drive-the-real-cart-from-python">Drive the cart</a> ·
   <a href="#hardware">Hardware</a> ·
   <a href="#safety">Safety</a>
 </p>
@@ -135,7 +135,10 @@ pip install -r policies/segmentation/requirements.txt
 python policies/segmentation/live.py --source 0 --model b2
 ```
 
-## Cart API
+## Drive the real cart from Python
+
+The cart API is how every policy moves the actual cart. These calls turn the
+steering column and press the pedals on the real vehicle.
 
 ```python
 from cartlib import Cart
@@ -162,6 +165,11 @@ with Cart() as cart:
 Full reference: [`cart-api/README.md`](cart-api/README.md).
 
 ## Hardware
+
+> [!NOTE]
+> 🚧 **Under construction.** Renders of the hardware designs (steering motor mount,
+> belt drive, pedal actuator brackets, camera and GPS mounts, compute enclosure)
+> are coming soon. The CAD files will live in [`hardware/cad/`](hardware/cad).
 
 | Subsystem | Hardware | Interface |
 |-----------|----------|-----------|
