@@ -9,7 +9,6 @@
   <img alt="Python" src="https://img.shields.io/badge/python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white">
   <img alt="NVIDIA Jetson AGX Thor" src="https://img.shields.io/badge/NVIDIA-Jetson%20AGX%20Thor-76B900?style=for-the-badge&logo=nvidia&logoColor=white">
   <img alt="RTK GNSS" src="https://img.shields.io/badge/RTK-cm--level%20GNSS-0A66C2?style=for-the-badge">
-  <img alt="Arduino" src="https://img.shields.io/badge/firmware-Arduino-00878F?style=for-the-badge&logo=arduino&logoColor=white">
 </p>
 
 <img src="docs/assets/cart-driving.gif" width="720" alt="The cart driving itself on Stanford campus, nobody at the wheel">
