@@ -1,4 +1,4 @@
-# drive-by-segmentation
+# Drive by Segmentation
 
 Camera-only driving. A single wide-angle front camera is segmented with
 **SegFormer** (Cityscapes), projected to a **bird's-eye view** with the
@@ -6,7 +6,7 @@ calibrated fisheye model, and a **lane-aware centerline planner** turns the
 drivable area into a trajectory and a steering command.
 
 <p align="center">
-  <img src="../docs/assets/segmentation-demo.gif" width="560" alt="SegFormer road segmentation on Stanford campus">
+  <img src="../../docs/assets/segmentation-demo.gif" width="560" alt="SegFormer road segmentation on Stanford campus">
 </p>
 
 ## Pipeline
@@ -59,4 +59,4 @@ python onboard/segmentation_infer.py
 
 The sidecar publishes `steer_deg` and `target_gas` / `target_brake` to a JSON
 state file that the drive loop consumes; actuation goes through
-[`cart-api`](../cart-api).
+[`cart-api`](../../cart-api).

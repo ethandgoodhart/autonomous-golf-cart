@@ -1,8 +1,8 @@
-# drive-by-rtk
+# Drive by RTK
 
 Centimeter-level waypoint following. Draw lanes on a map, pick a route, and
 the cart drives it using an **RTK-corrected u-blox ZED-F9x** fix and a
-pure-pursuit path follower from [`cart-api`](../cart-api).
+pure-pursuit path follower from [`cart-api`](../../cart-api).
 
 ## Layout
 
@@ -37,7 +37,7 @@ through a Cloudflare tunnel.
 ### Record and replay paths from the CLI
 
 ```bash
-../cart-api/cart record paths/my_loop.json --ntrip   # drive manually, record
-../cart-api/cart follow paths/my_loop.json           # dry run
-../cart-api/cart drive  paths/my_loop.json --max-speed 0.12
+../../cart-api/cart record paths/my_loop.json --ntrip   # drive manually, record
+../../cart-api/cart follow paths/my_loop.json           # dry run
+../../cart-api/cart drive  paths/my_loop.json --max-speed 0.12
 ```

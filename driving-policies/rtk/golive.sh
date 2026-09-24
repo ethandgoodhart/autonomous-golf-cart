@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # golive.sh — bring up the whole live stack with one command:
-#   * the cart WebSocket bridge  (../cart-api/cart serve  -> ws://localhost:8765)
+#   * the cart WebSocket bridge  (../../cart-api/cart serve  -> ws://localhost:8765)
 #   * the drivelive web UI        (Next.js dev server   -> http://localhost:3001)
 #
 # The bridge runs in the FOREGROUND so you see live GPS/follow telemetry and can
@@ -75,4 +75,4 @@ echo "[golive] starting cart bridge (Ctrl-C here stops everything)..."
 echo "------------------------------------------------------------"
 
 # --- run the bridge in the foreground (Ctrl-C falls through to cleanup) ----
-../cart-api/cart serve "$@"
+../../cart-api/cart serve "$@"

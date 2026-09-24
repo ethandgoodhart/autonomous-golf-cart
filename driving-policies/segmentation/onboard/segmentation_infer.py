@@ -34,7 +34,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import seg_fast  # noqa: E402
 
 
-SEG_REPO_DEFAULT = Path(__file__).resolve().parent.parent  # drive-by-segmentation/
+SEG_REPO_DEFAULT = Path(__file__).resolve().parent.parent  # driving-policies/segmentation/
 FRAMES_DIR_DEFAULT = Path("/tmp/cart_frames")
 STATE_FILE_DEFAULT = Path("/tmp/autoware_state.json")
 EGO_STATE_FILE_DEFAULT = Path(os.environ.get("EGO_STATE_FILE", "/tmp/ego_state.json"))

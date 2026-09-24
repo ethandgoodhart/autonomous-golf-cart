@@ -35,13 +35,14 @@ This project turns a standard electric golf cart into a self-driving vehicle usi
 off-the-shelf parts: an NVIDIA Jetson for compute, an ODrive-driven steering column,
 linear actuators on the pedals, an RTK GNSS receiver, and cameras.
 
-The cart has **two independent autonomy stacks** that share a single hardware API:
+The cart's driving policies live in [`driving-policies/`](driving-policies). The two
+stacks share one hardware API:
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### 🛰️ [drive-by-rtk](drive-by-rtk)
+### 🛰️ [Drive by RTK](driving-policies/rtk)
 Follow waypoints with **centimeter-level RTK GPS**. Draw lanes on a map, pick a
 route in the web UI, press **Drive**, and a pure-pursuit controller steers the
 cart along it.
@@ -49,7 +50,7 @@ cart along it.
 </td>
 <td width="50%" valign="top">
 
-### 👁️ [drive-by-segmentation](drive-by-segmentation)
+### 👁️ [Drive by Segmentation](driving-policies/segmentation)
 Drive from **a camera alone**. SegFormer segments the road, the drivable area
 is projected into a bird's-eye view, and a lane-aware planner outputs a
 trajectory and steering angle.
@@ -68,14 +69,14 @@ One Python interface to the RTK GPS, steering, gas, and brake. Both stacks drive
 
 <div align="center">
 <img src="docs/assets/segmentation-demo.gif" width="480" alt="Road segmentation overlay">
-<br><sub>drive-by-segmentation: SegFormer road mask (purple) on campus footage</sub>
+<br><sub>Drive by Segmentation: SegFormer road mask (purple) on campus footage</sub>
 </div>
 
 ## ✦ Architecture
 
 ```
             ┌──────────────────────────┐        ┌──────────────────────────────┐
-            │       drive-by-rtk       │        │     drive-by-segmentation    │
+            │   driving-policies/rtk   │        │ driving-policies/segmentation│
             │ map UI · route graph ·   │        │ SegFormer · BEV projection · │
             │ pure-pursuit follower    │        │ lane-aware planner           │
             └────────────┬─────────────┘        └──────────────┬───────────────┘
@@ -111,17 +112,18 @@ autonomous-golf-cart/
 │   ├── examples/              read_all · record_path · follow_path · actuation_demo
 │   ├── tests/                 simulated path-follower tests
 │   └── selftest.py            read-only hardware check
-├── drive-by-rtk/              RTK waypoint-following stack
-│   ├── drivelive/             Next.js + Mapbox operator UI
-│   ├── lane-annotator/        lane-drawing tool
-│   ├── maps/                  annotated campus lane maps
-│   ├── rtk-sensor-live/       standalone live tracker
-│   └── golive.sh              one-command bring-up
-├── drive-by-segmentation/     camera-only perception + planning stack
-│   ├── live.py                live steering from camera / video
-│   ├── path_planning.py       Frenet + MPC planners on the BEV
-│   ├── onboard/               Jetson runtime + TensorRT export
-│   └── *_modal.py             cloud-GPU batch jobs
+├── driving-policies/          autonomy stacks
+│   ├── rtk/                   Drive by RTK: waypoint following
+│   │   ├── drivelive/         Next.js + Mapbox operator UI
+│   │   ├── lane-annotator/    lane-drawing tool
+│   │   ├── maps/              annotated campus lane maps
+│   │   ├── rtk-sensor-live/   standalone live tracker
+│   │   └── golive.sh          one-command bring-up
+│   └── segmentation/          Drive by Segmentation: camera-only driving
+│       ├── live.py            live steering from camera / video
+│       ├── path_planning.py   Frenet + MPC planners on the BEV
+│       ├── onboard/           Jetson runtime + TensorRT export
+│       └── *_modal.py         cloud-GPU batch jobs
 ├── firmware/                  Arduino sketches (pedals, watchdog, GPS passthrough)
 ├── hardware/                  mechanical · electrical · pcb · sensors/calibration
 └── docs/                      architecture + subsystem write-ups
@@ -151,14 +153,14 @@ pip install -e "cart-api[server]"
 ```bash
 export MAPBOX_TOKEN=pk.your_token
 export NTRIP_RTKDATA_USER=...  NTRIP_RTKDATA_PASS=...
-./drive-by-rtk/golive.sh --ntrip          # → http://localhost:3001
+./driving-policies/rtk/golive.sh --ntrip          # → http://localhost:3001
 ```
 
 **Drive by segmentation**
 
 ```bash
-pip install -r drive-by-segmentation/requirements.txt
-python drive-by-segmentation/live.py --source 0 --model b2
+pip install -r driving-policies/segmentation/requirements.txt
+python driving-policies/segmentation/live.py --source 0 --model b2
 ```
 
 ## ✦ Cart API

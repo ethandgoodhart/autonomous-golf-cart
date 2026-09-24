@@ -14,8 +14,8 @@ dist/
 
 # runtime artifacts
 cart-api/last_drive.json
-drive-by-rtk/lane-annotator/annotations.json
-drive-by-rtk/lane-annotator/annotations.backup-*.json
+driving-policies/rtk/lane-annotator/annotations.json
+driving-policies/rtk/lane-annotator/annotations.backup-*.json
 
 # large data / weights
 *.pth
