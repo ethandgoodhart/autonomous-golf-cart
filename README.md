@@ -17,19 +17,19 @@
 <sub>The cart driving itself through Stanford campus. Nobody touches the wheel.</sub>
 
 <p>
-  <a href="#-architecture">Architecture</a> ·
-  <a href="#-repository-layout">Layout</a> ·
-  <a href="#-quick-start">Quick start</a> ·
-  <a href="#-cart-api">Cart API</a> ·
-  <a href="#-hardware">Hardware</a> ·
-  <a href="#-safety">Safety</a>
+  <a href="#architecture">Architecture</a> ·
+  <a href="#repository-layout">Layout</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#cart-api">Cart API</a> ·
+  <a href="#hardware">Hardware</a> ·
+  <a href="#safety">Safety</a>
 </p>
 
 </div>
 
 ---
 
-## ✦ Overview
+## Overview
 
 This project turns a standard electric golf cart into a self-driving vehicle using
 off-the-shelf parts: an NVIDIA Jetson for compute, an ODrive-driven steering column,
@@ -72,7 +72,7 @@ One Python interface to the RTK GPS, steering, gas, and brake. Both stacks drive
 <br><sub>Drive by Segmentation: SegFormer road mask (purple) on campus footage</sub>
 </div>
 
-## ✦ Architecture
+## Architecture
 
 ```
             ┌──────────────────────────┐        ┌──────────────────────────────┐
@@ -103,7 +103,7 @@ One Python interface to the RTK GPS, steering, gas, and brake. Both stacks drive
 Compute runs on an **NVIDIA Jetson AGX Thor**. Development also works on a laptop.
 Deeper notes live in [`docs/architecture.md`](docs/architecture.md).
 
-## ✦ Repository layout
+## Repository layout
 
 ```
 autonomous-golf-cart/
@@ -129,7 +129,7 @@ autonomous-golf-cart/
 └── docs/                      architecture + subsystem write-ups
 ```
 
-## ✦ Quick start
+## Quick start
 
 ```bash
 git clone https://github.com/ethandgoodhart/autonomous-golf-cart.git
@@ -163,7 +163,7 @@ pip install -r driving-policies/segmentation/requirements.txt
 python driving-policies/segmentation/live.py --source 0 --model b2
 ```
 
-## ✦ Cart API
+## Cart API
 
 ```python
 from cartlib import Cart
@@ -189,7 +189,7 @@ with Cart() as cart:
 
 Full reference: [`cart-api/README.md`](cart-api/README.md).
 
-## ✦ Hardware
+## Hardware
 
 | Subsystem | Hardware | Interface |
 |-----------|----------|-----------|
@@ -205,7 +205,7 @@ write-ups are in [`docs/`](docs): [steering](docs/steering.md) ·
 [pedal actuators](docs/linear_actuators.md) · [e-stop](docs/estop.md) ·
 [GPS](docs/gps.md) · [cameras](docs/cameras.md).
 
-## ✦ Safety
+## Safety
 
 > [!WARNING]
 > This software moves a real vehicle. Always test in a closed area, at low speed,
@@ -216,17 +216,10 @@ write-ups are in [`docs/`](docs): [steering](docs/steering.md) ·
 - Throttle is capped in layers: hardware pot max → global speed limit → per-mode cap. See [`firmware/limits.py`](firmware/limits.py).
 - Anything that moves the cart is opt-in. The gas demo additionally requires `--i-understand-this-drives`.
 
-## ✦ Contributing
+## Contributing
 
-Issues and pull requests are welcome. When changing limits, keep
-[`firmware/limits.py`](firmware/limits.py),
-[`firmware/sketches/common/cart_limits.h`](firmware/sketches/common/cart_limits.h), and
-[`cart-api/cartlib/config.py`](cart-api/cartlib/config.py) in sync.
+Issues and pull requests are welcome.
 
-## ✦ License
+## License
 
 Released under the [MIT License](LICENSE).
-
-<div align="center">
-<sub>Built at Stanford 🌲</sub>
-</div>
