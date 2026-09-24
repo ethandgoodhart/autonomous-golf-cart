@@ -7,7 +7,7 @@ The main offline path this supports is the drive-by-segmentation output:
     scripts/seg_depth_pointcloud.py \
         --depth /path/to/depth_maps.npz \
         --seg /path/to/seg_maps_30fps.npz \
-        --calib driving-policies/segmentation/camera_calibration.json \
+        --calib policies/segmentation/camera_calibration.json \
         --frame 0 \
         --output occupied_cloud.ply
 

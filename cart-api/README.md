@@ -110,5 +110,5 @@ everything detected and readable. Last run on the cart:
 - `examples/actuation_demo.py` moves real hardware and is fully opt-in; the
   `--gas` demo additionally requires `--i-understand-this-drives`.
 - Limits in `config.py` mirror the production firmware
-  ([`firmware/limits.py`](../firmware/limits.py), [`firmware/sketches/common/cart_limits.h`](../firmware/sketches/common/cart_limits.h)). Keep them in sync.
+  ([`hardware/arduino-sketches/limits.py`](../hardware/arduino-sketches/limits.py), [`hardware/arduino-sketches/sketches/common/cart_limits.h`](../hardware/arduino-sketches/sketches/common/cart_limits.h)). Keep them in sync.
 ```

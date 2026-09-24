@@ -18,7 +18,6 @@
 
 <p>
   <a href="#architecture">Architecture</a> ·
-  <a href="#repository-layout">Layout</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#cart-api">Cart API</a> ·
   <a href="#hardware">Hardware</a> ·
@@ -35,14 +34,14 @@ This project turns a standard electric golf cart into a self-driving vehicle usi
 off-the-shelf parts: an NVIDIA Jetson for compute, an ODrive-driven steering column,
 linear actuators on the pedals, an RTK GNSS receiver, and cameras.
 
-The cart's driving policies live in [`driving-policies/`](driving-policies). The two
+The cart's driving policies live in [`policies/`](policies). The two
 stacks share one hardware API:
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### 🛰️ [Drive by RTK](driving-policies/rtk)
+### 🛰️ [Drive by RTK](policies/rtk)
 Follow waypoints with **centimeter-level RTK GPS**. Draw lanes on a map, pick a
 route in the web UI, press **Drive**, and a pure-pursuit controller steers the
 cart along it.
@@ -50,7 +49,7 @@ cart along it.
 </td>
 <td width="50%" valign="top">
 
-### 👁️ [Drive by Segmentation](driving-policies/segmentation)
+### 👁️ [Drive by Segmentation](policies/segmentation)
 Drive from **a camera alone**. SegFormer segments the road, the drivable area
 is projected into a bird's-eye view, and a lane-aware planner outputs a
 trajectory and steering angle.
@@ -76,7 +75,7 @@ One Python interface to the RTK GPS, steering, gas, and brake. Both stacks drive
 
 ```
             ┌──────────────────────────┐        ┌──────────────────────────────┐
-            │   driving-policies/rtk   │        │ driving-policies/segmentation│
+            │       policies/rtk       │        │    policies/segmentation     │
             │ map UI · route graph ·   │        │ SegFormer · BEV projection · │
             │ pure-pursuit follower    │        │ lane-aware planner           │
             └────────────┬─────────────┘        └──────────────┬───────────────┘
@@ -103,32 +102,6 @@ One Python interface to the RTK GPS, steering, gas, and brake. Both stacks drive
 Compute runs on an **NVIDIA Jetson AGX Thor**. Development also works on a laptop.
 Deeper notes live in [`docs/architecture.md`](docs/architecture.md).
 
-## Repository layout
-
-```
-autonomous-golf-cart/
-├── cart-api/                  cartlib: Python control library + `cart` CLI
-│   ├── cartlib/               gps · ntrip · steering · pedals · follow · server
-│   ├── examples/              read_all · record_path · follow_path · actuation_demo
-│   ├── tests/                 simulated path-follower tests
-│   └── selftest.py            read-only hardware check
-├── driving-policies/          autonomy stacks
-│   ├── rtk/                   Drive by RTK: waypoint following
-│   │   ├── drivelive/         Next.js + Mapbox operator UI
-│   │   ├── lane-annotator/    lane-drawing tool
-│   │   ├── maps/              annotated campus lane maps
-│   │   ├── rtk-sensor-live/   standalone live tracker
-│   │   └── golive.sh          one-command bring-up
-│   └── segmentation/          Drive by Segmentation: camera-only driving
-│       ├── live.py            live steering from camera / video
-│       ├── path_planning.py   Frenet + MPC planners on the BEV
-│       ├── onboard/           Jetson runtime + TensorRT export
-│       └── *_modal.py         cloud-GPU batch jobs
-├── firmware/                  Arduino sketches (pedals, watchdog, GPS passthrough)
-├── hardware/                  mechanical · electrical · pcb · sensors/calibration
-└── docs/                      architecture + subsystem write-ups
-```
-
 ## Quick start
 
 ```bash
@@ -153,14 +126,14 @@ pip install -e "cart-api[server]"
 ```bash
 export MAPBOX_TOKEN=pk.your_token
 export NTRIP_RTKDATA_USER=...  NTRIP_RTKDATA_PASS=...
-./driving-policies/rtk/golive.sh --ntrip          # → http://localhost:3001
+./policies/rtk/golive.sh --ntrip          # → http://localhost:3001
 ```
 
 **Drive by segmentation**
 
 ```bash
-pip install -r driving-policies/segmentation/requirements.txt
-python driving-policies/segmentation/live.py --source 0 --model b2
+pip install -r policies/segmentation/requirements.txt
+python policies/segmentation/live.py --source 0 --model b2
 ```
 
 ## Cart API
@@ -213,7 +186,7 @@ write-ups are in [`docs/`](docs): [steering](docs/steering.md) ·
 
 - The pedal firmware boots in **FAILSAFE** and re-enters it (gas released, **brake applied**) if the host heartbeat stops for more than 300 ms.
 - A hardware **e-stop** forces full brake and zero gas at the firmware level.
-- Throttle is capped in layers: hardware pot max → global speed limit → per-mode cap. See [`firmware/limits.py`](firmware/limits.py).
+- Throttle is capped in layers: hardware pot max → global speed limit → per-mode cap. See [`hardware/arduino-sketches/limits.py`](hardware/arduino-sketches/limits.py).
 - Anything that moves the cart is opt-in. The gas demo additionally requires `--i-understand-this-drives`.
 
 ## Contributing

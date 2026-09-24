@@ -46,7 +46,7 @@ brake     = l2 * BRAKE_POT_MAX
 Where:
 
 - `PS5_STEERING_MAX_DEG = min(60°, STEERING_MAX_DEG, -STEERING_MIN_DEG)` — narrower than the cart-wide soft limit while we're still early in testing.
-- `effective_gas_cap(PS5_GAS_LIMIT) = min(GAS_POT_MAX, GLOBAL_SPEED_LIMIT, PS5_GAS_LIMIT)` — pulling `GLOBAL_SPEED_LIMIT` down in [`limits.py`](../firmware/limits.py) always wins.
+- `effective_gas_cap(PS5_GAS_LIMIT) = min(GAS_POT_MAX, GLOBAL_SPEED_LIMIT, PS5_GAS_LIMIT)` — pulling `GLOBAL_SPEED_LIMIT` down in [`limits.py`](../hardware/arduino-sketches/limits.py) always wins.
 
 `PedalLink` clamps one more time against `GAS_POT_MAX` / `BRAKE_POT_MAX` before the write as a last-ditch safety net.
 

@@ -116,8 +116,8 @@ The soft angle limits and the belt ratio live in code in two mirrored places —
 | `STEERING_MAX_DEG`                             | +90.0 | Right soft limit, at the steering column    |
 | `STEERING_BELT_RATIO`                          | 3.0   | Motor turns per column turn (HTD 5M, 20T→60T) |
 
-- Python: [`limits.py`](../firmware/limits.py)
-- Arduino: [`sketches/common/cart_limits.h`](../firmware/sketches/common/cart_limits.h)
+- Python: [`limits.py`](../hardware/arduino-sketches/limits.py)
+- Arduino: [`sketches/common/cart_limits.h`](../hardware/arduino-sketches/sketches/common/cart_limits.h)
 
 `main.py` imports `STEERING_MIN_DEG` / `STEERING_MAX_DEG` / `STEERING_BELT_RATIO` and uses them as the sweep amplitude and gear reduction — don't hard-code those numbers in new scripts.
 

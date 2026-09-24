@@ -1,4 +1,4 @@
-# firmware
+# arduino-sketches
 
 Arduino Mega 2560 sketches that sit between the Jetson and the actuators.
 
@@ -11,9 +11,9 @@ Arduino Mega 2560 sketches that sit between the Jetson and the actuators.
 | `upload.py` | Compile + flash with `arduino-cli`, with `sketches/common` on the include path. |
 
 ```bash
-python firmware/upload.py                   # list sketches
-python firmware/upload.py pedal_control     # build + flash
+python hardware/arduino-sketches/upload.py                   # list sketches
+python hardware/arduino-sketches/upload.py pedal_control     # build + flash
 ```
 
-See [`docs/linear_actuators.md`](../docs/linear_actuators.md) and
-[`docs/estop.md`](../docs/estop.md) for wiring and the safety model.
+See [`docs/linear_actuators.md`](../../docs/linear_actuators.md) and
+[`docs/estop.md`](../../docs/estop.md) for wiring and the safety model.

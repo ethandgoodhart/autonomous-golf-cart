@@ -16,10 +16,10 @@ This script will also install ``arduino:avr`` on demand if it's missing.
 
 Usage:
 
-    python firmware/upload.py                          # list sketches
-    python firmware/upload.py pedal_control            # compile + upload
-    python firmware/upload.py pedal_control --monitor  # also open serial monitor
-    python firmware/upload.py pedal_control --port /dev/tty.usbmodem1401
+    python hardware/arduino-sketches/upload.py                          # list sketches
+    python hardware/arduino-sketches/upload.py pedal_control            # compile + upload
+    python hardware/arduino-sketches/upload.py pedal_control --monitor  # also open serial monitor
+    python hardware/arduino-sketches/upload.py pedal_control --port /dev/tty.usbmodem1401
 
 Sketches are auto-discovered from ``sketches/<name>/<name>.ino``. The
 ``sketches/common`` header directory is (correctly) ignored because it
@@ -34,7 +34,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent  # firmware/
+PROJECT_ROOT = Path(__file__).resolve().parent  # hardware/arduino-sketches/
 SKETCHES_DIR = PROJECT_ROOT / "sketches"
 
 # Arduino Mega 2560 FQBN (`arduino-cli board listall mega` confirmed this
@@ -169,7 +169,7 @@ def main() -> int:
     if args.list or args.sketch is None:
         print_sketch_list(sketches)
         if args.sketch is None and not args.list:
-            print("\nUsage: python firmware/upload.py <sketch>")
+            print("\nUsage: python hardware/arduino-sketches/upload.py <sketch>")
             return 2
         return 0
 

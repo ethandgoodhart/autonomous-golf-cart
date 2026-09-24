@@ -43,7 +43,7 @@ cart-fsd/
 
 ### Planned
 
-Once `ps5_drive.py` and the autonomy stack start sharing hardware wrappers, the hardware-interfacing code moves into an importable `cart/` package. `sketches/` becomes `firmware/`. Scripts become thin glue. This refactor is staged but not yet executed.
+Once `ps5_drive.py` and the autonomy stack start sharing hardware wrappers, the hardware-interfacing code moves into an importable `cart/` package. `sketches/` becomes `hardware/arduino-sketches/`. Scripts become thin glue. This refactor is staged but not yet executed.
 
 ```text
 cart/
@@ -54,7 +54,7 @@ cart/
 ├── cameras/{rig.py, config.py}    # opens 4 cams by logical name
 └── sensors/{gps.py, imu.py}
 
-firmware/                          # renamed sketches/
+hardware/arduino-sketches/         # renamed sketches/
 scripts/                           # CLI entrypoints, no logic
 tests/                             # pytest — pure-logic coverage
 ```
@@ -63,7 +63,7 @@ tests/                             # pytest — pure-logic coverage
 
 ## Cross-cutting: gas authority hierarchy
 
-Every gas-pedal command, regardless of who's driving, is clamped by this stack (see [`limits.py`](../firmware/limits.py)):
+Every gas-pedal command, regardless of who's driving, is clamped by this stack (see [`limits.py`](../hardware/arduino-sketches/limits.py)):
 
 ```text
 GAS_POT_MAX          hardware ceiling — the actuator physically can't go past this
@@ -100,7 +100,7 @@ The firmware watchdog and the host fault detection together mean: **yanking the 
 
 `.ino` files are the Arduino IDE's native format — but they're really just C++ with a preprocessor that auto-generates prototypes and injects `#include <Arduino.h>`. We keep the extension (it's what every AVR tool expects) and drive the toolchain from the CLI via [`arduino-cli`](https://arduino.github.io/arduino-cli/), which is what the IDE's green arrow calls under the hood.
 
-[`scripts/upload.py`](../firmware/upload.py) wraps `arduino-cli compile` + `arduino-cli upload` so the flow is one command:
+[`scripts/upload.py`](../hardware/arduino-sketches/upload.py) wraps `arduino-cli compile` + `arduino-cli upload` so the flow is one command:
 
 ```bash
 uv run python scripts/upload.py --list                       # show sketches
@@ -124,8 +124,8 @@ Mechanics:
 
 Two files, one truth:
 
-- [`limits.py`](../firmware/limits.py) — everything Python imports.
-- [`sketches/common/cart_limits.h`](../firmware/sketches/common/cart_limits.h) — what every Arduino sketch `#include`s.
+- [`limits.py`](../hardware/arduino-sketches/limits.py) — everything Python imports.
+- [`sketches/common/cart_limits.h`](../hardware/arduino-sketches/sketches/common/cart_limits.h) — what every Arduino sketch `#include`s.
 
 When pot calibration or steering limits change, **edit both** or one side will silently trust numbers the other has stopped believing.
 

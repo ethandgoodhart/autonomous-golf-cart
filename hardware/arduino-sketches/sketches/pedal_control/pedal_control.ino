@@ -34,7 +34,7 @@
  *   ERR,<text>                         parse errors, limit hits, etc.
  */
 
-// ``sketches/common`` is added to the include path by firmware/upload.py
+// ``sketches/common`` is added to the include path by hardware/arduino-sketches/upload.py
 // (and should be by any other build system that uses this sketch).
 #include "cart_limits.h"
 

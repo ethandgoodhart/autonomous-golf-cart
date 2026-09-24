@@ -76,8 +76,8 @@ Both sketches enforce these limits in software: **when the pot reading hits a li
 
 These numbers live in code in two mirrored places — **edit both when calibration changes**:
 
-- Python: [`limits.py`](../firmware/limits.py) — `GAS_POT_MIN/MAX`, `BRAKE_POT_MIN/MAX`
-- Arduino: [`sketches/common/cart_limits.h`](../firmware/sketches/common/cart_limits.h) — same names, `float` constants
+- Python: [`limits.py`](../hardware/arduino-sketches/limits.py) — `GAS_POT_MIN/MAX`, `BRAKE_POT_MIN/MAX`
+- Arduino: [`sketches/common/cart_limits.h`](../hardware/arduino-sketches/sketches/common/cart_limits.h) — same names, `float` constants
 
 ### How the limit logic works
 

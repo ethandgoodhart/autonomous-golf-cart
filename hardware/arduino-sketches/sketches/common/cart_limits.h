@@ -1,5 +1,5 @@
 // Cart FSD — single source of truth for mechanical / software limits
-// (Arduino side). Keep this in sync with firmware/limits.py and cart-api/cartlib/config.py.
+// (Arduino side). Keep this in sync with hardware/arduino-sketches/limits.py and cart-api/cartlib/config.py.
 //
 // Include from any sketch that drives an actuator or the steering motor:
 //   #include "../common/cart_limits.h"

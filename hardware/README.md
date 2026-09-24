@@ -1,9 +1,11 @@
 # hardware
 
-Designs for the physical cart: mounts, enclosures, wiring, and boards.
+Designs for the physical cart (mounts, enclosures, wiring, boards) and the Arduino code that runs on it.
 
 | Folder | Put here |
 |--------|----------|
+| `arduino-sketches/` | Arduino Mega 2560 sketches for the pedals, watchdog, and GPS passthrough, plus `limits.py` and `upload.py`. See its [README](arduino-sketches/README.md). |
+| `cad/` | CAD designs (STEP / STL / Fusion / Onshape exports). |
 | `mechanical/` | CAD (STEP / STL / Fusion / Onshape exports): steering-motor mount, belt drive, pedal actuator brackets, camera + GPS mounts, compute enclosure. |
 | `electrical/` | Wiring diagrams, power distribution (48 V → 12 V / 5 V), e-stop loop, harness pinouts. |
 | `pcb/` | KiCad projects, Gerbers, BOMs for custom boards. |
